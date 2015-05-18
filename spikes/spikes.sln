@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwinHelloWorld", "HelloWorldConsole\OwinHelloWorld.csproj", "{8B0AB6A9-A5F4-4BCE-92BD-ABACC6ED9C79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPIO", "GPIO\GPIO.csproj", "{536E6F3C-F72D-4B09-957F-4DFD8BB36843}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ws2812test", "ws2812test\ws2812test.csproj", "{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B50A50D-A702-4861-B5C3-8EAD05992825}"
+	ProjectSection(SolutionItems) = preProject
+		libpigpio\libpigpio.c = libpigpio\libpigpio.c
+		libpigpio\libpigpio.h = libpigpio\libpigpio.h
+		libpigpio\main.c = libpigpio\main.c
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B0AB6A9-A5F4-4BCE-92BD-ABACC6ED9C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B0AB6A9-A5F4-4BCE-92BD-ABACC6ED9C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B0AB6A9-A5F4-4BCE-92BD-ABACC6ED9C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B0AB6A9-A5F4-4BCE-92BD-ABACC6ED9C79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{536E6F3C-F72D-4B09-957F-4DFD8BB36843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{536E6F3C-F72D-4B09-957F-4DFD8BB36843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{536E6F3C-F72D-4B09-957F-4DFD8BB36843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{536E6F3C-F72D-4B09-957F-4DFD8BB36843}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
