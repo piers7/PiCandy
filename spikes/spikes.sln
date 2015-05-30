@@ -10,10 +10,29 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ws2812test", "ws2812test\ws2812test.csproj", "{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B50A50D-A702-4861-B5C3-8EAD05992825}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gpio", "gpio", "{DB233A01-0D18-4A69-98FB-282278E52A32}"
 	ProjectSection(SolutionItems) = preProject
 		libpigpio\libpigpio.c = libpigpio\libpigpio.c
 		libpigpio\libpigpio.h = libpigpio\libpigpio.h
 		libpigpio\main.c = libpigpio\main.c
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ws2812", "ws2812", "{6573B59F-0F2B-4AE4-925D-3BA5FC18ED8C}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\RaspberryPi-NeoPixel-WS2812\ws2812-RPi.c = ..\..\RaspberryPi-NeoPixel-WS2812\ws2812-RPi.c
+		..\..\RaspberryPi-NeoPixel-WS2812\ws2812-RPi.h = ..\..\RaspberryPi-NeoPixel-WS2812\ws2812-RPi.h
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rpi_ws281x_demo", "rpi_ws281x_demo\rpi_ws281x_demo.csproj", "{4D233DDF-76E1-4789-AA69-BC6DF1283B82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rpi", "rpi", "{CAA5CF24-25F0-4915-8EDF-B12DA9BE1C06}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\rpi_ws281x\clk.h = ..\..\rpi_ws281x\clk.h
+		..\..\rpi_ws281x\dma.h = ..\..\rpi_ws281x\dma.h
+		..\..\rpi_ws281x\gpio.h = ..\..\rpi_ws281x\gpio.h
+		..\..\rpi_ws281x\pwm.h = ..\..\rpi_ws281x\pwm.h
+		..\..\rpi_ws281x\ws2811.h = ..\..\rpi_ws281x\ws2811.h
 	EndProjectSection
 EndProject
 Global
@@ -34,8 +53,17 @@ Global
 		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D233DDF-76E1-4789-AA69-BC6DF1283B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D233DDF-76E1-4789-AA69-BC6DF1283B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D233DDF-76E1-4789-AA69-BC6DF1283B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D233DDF-76E1-4789-AA69-BC6DF1283B82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{536E6F3C-F72D-4B09-957F-4DFD8BB36843} = {DB233A01-0D18-4A69-98FB-282278E52A32}
+		{3AC7AB0A-72C5-4C37-968A-C606DE964A5A} = {6573B59F-0F2B-4AE4-925D-3BA5FC18ED8C}
+		{4D233DDF-76E1-4789-AA69-BC6DF1283B82} = {CAA5CF24-25F0-4915-8EDF-B12DA9BE1C06}
 	EndGlobalSection
 EndGlobal
