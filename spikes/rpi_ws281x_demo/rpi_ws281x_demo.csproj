@@ -7,7 +7,7 @@
     <ProjectGuid>{4D233DDF-76E1-4789-AA69-BC6DF1283B82}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>rpi_ws281x_demo</RootNamespace>
+    <RootNamespace>rpi_ws281x</RootNamespace>
     <AssemblyName>rpi_ws281x_demo</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -36,7 +36,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+  <Choose>
+    <When Condition=" '$(OS)' == 'Unix' ">
+      <ItemGroup>
+        <Reference Include="Mono.Posix" />
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
+    <Compile Include="ProcessCancellationToken.cs" />
     <Compile Include="ws281xPINVOKE.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

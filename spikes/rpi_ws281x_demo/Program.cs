@@ -16,87 +16,52 @@ namespace rpi_ws281x
         const int HEIGHT                                   = 8;
         const int LED_COUNT                                = (WIDTH * HEIGHT);
 
-        static byte _cancelRequested;
+        static int _cancelRequested;
 
         static int Main(string[] args)
         {
-            var cancelRequested = false;
-            Console.TreatControlCAsInput = true;
-            Console.CancelKeyPress += (o,e) => _cancelRequested = 1;
+            //var cancelRequested = false;
+            //Console.TreatControlCAsInput = true;
+            //Console.CancelKeyPress += (o,e) => _cancelRequested = 1;
+
+            // Here's a good post on capturing *all* termination signals
+            // http://www.developersalley.com/blog/post/2011/05/13/How-To-Catch-CTRL-C-Or-Break-In-C-Console-Application.aspx
+            // http://www.codeproject.com/Articles/2357/Console-Event-Handling
+            // Better than Console.TreatControlCAsInput
+            // but *oh dear* not cross-platform
+            ProcessCancellationToken.SetupHooks();
 
             var client = new NeoPixels(LED_COUNT);
-
             using (var session = client.Open())
             {
                 for (int i = 0; i < LED_COUNT; i++)
                 {
-                    if (Thread.VolatileRead(ref _cancelRequested) > 0)
+                    if (ProcessCancellationToken.CancelRequested || CancelKeyPressed())
                         return 0;
 
                     Console.WriteLine("Set LED {0}", i);
                     session.SetPixel(i, 0x00FF0000);
                     session.Render();
-                    Thread.Sleep(100);
+
+                    if (ProcessCancellationToken.CancelRequested || CancelKeyPressed())
+                        Thread.Sleep(100);
                 }
             }
-
-            //var data = new ws2811_t{
-            //    freq = TARGET_FREQ,
-            //    dmanum = DMA,
-            //    channel = new ws2811_channel_t[2] {
-            //        new ws2811_channel_t {
-            //            gpionum = GPIO_PIN,
-            //            count = LED_COUNT,
-            //            invert = 0,
-            //            brightness = 255,
-            //        },
-            //        new ws2811_channel_t {
-            //        },
-            //    }
-            //};
-
-            //int ret;
-            //if ((ret = NativeMethods.ws2811_init(ref data)) != 0)
-            //{
-            //    Console.WriteLine("ws2811_init failed - exit code {0}", ret);
-            //    return -1;
-            //}
-
-            //var ledData = new UInt32[LED_COUNT];
-
-            //try{
-            //    for (int i = 0; i < LED_COUNT; i++)
-            //    {
-            //        if (cancelRequested)
-            //            return 0;
-
-            //        Console.WriteLine("Set LED {0}", i);
-            //        ledData[i] = 0x00FF0000;
-
-            //        // Push array as structure back to pointer address
-            //        // TODO: should I be passing 'delete old=true'?
-            //        //Marshal.StructureToPtr(ledData, data.channel[0].leds, false);
-
-            //        var offset = i * 4;
-            //        Marshal.WriteByte(data.channel[0].leds, offset + 0, 0);
-            //        Marshal.WriteByte(data.channel[0].leds, offset + 1, 255);
-            //        Marshal.WriteByte(data.channel[0].leds, offset + 2, 0);
-            //        Marshal.WriteByte(data.channel[0].leds, offset + 3, 0);
-
-            //        if ((ret = NativeMethods.ws2811_render(ref data)) != 0)
-            //        {
-            //            Console.WriteLine("ws2811_init failed - exit code {0}", ret);
-            //            return -1;
-            //        }
-
-            //        Thread.Sleep(TimeSpan.FromMilliseconds(100));
-            //    }
-
-            //}finally{
-            //    Console.WriteLine("Tear down");
-            //    NativeMethods.ws2811_fini(ref data);
-            //}
             return 0;
+        }
+
+        private static bool CancelKeyPressed()
+        {
+            while (Console.KeyAvailable)
+            {
+                var key = Console.ReadKey();
+                switch(key.Key)
+                {
+                    case ConsoleKey.Escape:
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }
