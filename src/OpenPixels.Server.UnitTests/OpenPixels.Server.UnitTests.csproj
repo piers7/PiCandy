@@ -60,6 +60,20 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpcListenerConsole\OpcListenerConsole.csproj">
+      <Project>{82e94be8-bf52-4e39-a0e6-5a8a255e37c4}</Project>
+      <Name>OpcListenerConsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenPixels.Server.OPC\OpenPixels.Server.OPC.csproj">
+      <Project>{5d16a046-c545-447f-b944-89c91943f4c6}</Project>
+      <Name>OpenPixels.Server.OPC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenPixels.Server\OpenPixels.Server.csproj">
+      <Project>{7a52f1dd-3341-4f1a-a0be-7932ec5ac63f}</Project>
+      <Name>OpenPixels.Server</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

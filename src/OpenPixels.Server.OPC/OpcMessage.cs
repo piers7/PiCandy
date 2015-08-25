@@ -23,5 +23,17 @@ namespace OpenPixels.Server.OPC
                 )
                 ;
         }
+
+        public string ToString(int numberOfPayloadBytesShown)
+        {
+            return string.Format("{0} {1} {2} {3}"
+                , Channel
+                , Command
+                , Length
+                , BitConverter.ToString(Data.Take(numberOfPayloadBytesShown).ToArray())
+                //.Select(b => b.ToString("x2")))
+                )
+                ;
+        }
     }
 }

@@ -11,10 +11,18 @@ namespace OpcListenerConsole
 {
     class Program
     {
+        const int defaultPort = 7890; // same as OpenPixelControl reference impl. uses
+
         static void Main(string[] args)
         {
-            var port = 9010;
-            using (var listener = OpcListener.Start(IPAddress.Any, port))
+            int port;
+            if (!(args.Length > 0 && int.TryParse(args[0], out port)))
+                port = defaultPort;
+
+            using (var listener = new SimpleSocketServer<OpcClientSession>(IPAddress.Any, port, 
+                client => new OpcClientSession(client),
+                session => session.DoWorkAsync
+                ))
             {
                 listener.ClientConnected += HandleClientConnected;
 
@@ -33,7 +41,7 @@ namespace OpcListenerConsole
 
         private static void HandleMessageReceived(object sender, OpcMessage message)
         {
-            Console.WriteLine(message);
+            Console.WriteLine(message.ToString(12));
         }
 
         private static void WriteEndpointsBanner(int port)

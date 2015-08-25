@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 
 namespace OpenPixels.Server.OPC
 {
-    public class OpcClientSession
+    /// <summary>
+    /// A message-level abstraction over a socket connection
+    /// using the OPC protocol.
+    /// The session will live until the session is closed.
+    /// </summary>
+    public class OpcClientSession : IWorker
     {
         private readonly System.Net.Sockets.TcpClient _client;
 
-        internal OpcClientSession(System.Net.Sockets.TcpClient client)
+        public OpcClientSession(System.Net.Sockets.TcpClient client)
         {
             _client = client;
         }
@@ -26,7 +31,7 @@ namespace OpenPixels.Server.OPC
             if (handler != null) handler(this, message);
         }
 
-        internal async Task Run(CancellationToken token)
+        public async Task DoWorkAsync(CancellationToken token)
         {
             try
             {
@@ -35,14 +40,14 @@ namespace OpenPixels.Server.OPC
                 while (!token.IsCancellationRequested)
                 {
                     // Handle message header
-                    Console.WriteLine("Reading... header");
+                    Console.WriteLine("Wait for header...");
                     var header = new byte[4];
-                    if (!await stream.TryReadAsync(header))
+                    if (!await stream.TryReadAsync(header).ConfigureAwait(false))
                     {
                         Console.WriteLine("Aborting - header not read");
                         return;
                     }
-                    Console.WriteLine("Read header");
+                    Console.WriteLine("Got header");
 
                     var message = new OpcMessage()
                     {
@@ -55,24 +60,23 @@ namespace OpenPixels.Server.OPC
                     // Handle message payload
                     if (message.Length > 0)
                     {
-                        Console.WriteLine("Reading message content of {0}...", message.Length);
+                        Console.WriteLine("Wait for content of {0}...", message.Length);
 
                         // read in message content
                         // slightly rubbish impl. - just use one big array
                         // but then we have to generate an array from it anyway, so (shrugs)
                         var data = new byte[message.Length];
-                        if (!await stream.TryReadAsync(data))
+                        if (!await stream.TryReadAsync(data).ConfigureAwait(false))
                         {
                             Console.WriteLine("Aborting - body not read");
                             return;
                         }
-                        Console.WriteLine("Read message content of {0}", message.Length);
+                        Console.WriteLine("Got message content of {0}", message.Length);
 
                         message.Data = data;
                     }
 
                     // Broadcast message for handling
-                    Console.WriteLine("Emit message");
                     OnMessageReceived(message);
 
                     // Seems like (as far as I can tell)

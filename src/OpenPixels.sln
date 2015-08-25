@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.Server", "OpenPixels.Server\OpenPixels.Server.csproj", "{7A52F1DD-3341-4F1A-A0BE-7932EC5AC63F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.ServerHost", "OpenPixels.ServerHost\OpenPixels.ServerHost.csproj", "{40F7F5A1-CE47-46E4-AAA9-29FBDE025AFF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D16A046-C545-447F-B944-89C91943F4C6} = {5D16A046-C545-447F-B944-89C91943F4C6}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.Server.OPC", "OpenPixels.Server.OPC\OpenPixels.Server.OPC.csproj", "{5D16A046-C545-447F-B944-89C91943F4C6}"
 EndProject

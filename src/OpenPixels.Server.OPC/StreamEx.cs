@@ -35,7 +35,9 @@ namespace OpenPixels.Server.OPC
             while (read < count)
             {
                 var remaining = count - read;
-                var received = await stream.ReadAsync(buffer, offset+read, remaining);
+                var received = await stream.ReadAsync(buffer, offset + read, remaining)
+                                            .ConfigureAwait(false)
+                                            ;
 
                 if (received == 0)
                     // indicates stream has ended (eg socket has been closed)

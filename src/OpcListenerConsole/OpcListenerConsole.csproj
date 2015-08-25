@@ -48,6 +48,10 @@
       <Project>{5d16a046-c545-447f-b944-89c91943f4c6}</Project>
       <Name>OpenPixels.Server.OPC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenPixels.Server\OpenPixels.Server.csproj">
+      <Project>{7a52f1dd-3341-4f1a-a0be-7932ec5ac63f}</Project>
+      <Name>OpenPixels.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
