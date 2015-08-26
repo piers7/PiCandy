@@ -39,18 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelegateCommand.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="IRunnable.cs" />
     <Compile Include="NullLogger.cs" />
+    <Compile Include="OpenPixelsServer.cs" />
     <Compile Include="SimpleSocketServer.cs" />
     <Compile Include="Renderers\ConsoleRenderer.cs" />
     <Compile Include="Renderers\TextWriterRenderer.cs" />
     <Compile Include="ICommandSource.cs" />
     <Compile Include="IPixelRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

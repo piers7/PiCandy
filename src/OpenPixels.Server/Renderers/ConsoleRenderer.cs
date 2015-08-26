@@ -8,8 +8,8 @@ namespace OpenPixels.Server.Renderers
 {
     public class ConsoleRenderer : TextWriterRenderer
     {
-        public ConsoleRenderer(int channel)
-            :base(channel, Console.Out, 20)
+        public ConsoleRenderer(int channel, int width = 20)
+            :base(channel, Console.Out, width)
         {
 
         }

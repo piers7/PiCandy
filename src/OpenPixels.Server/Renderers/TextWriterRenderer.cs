@@ -31,9 +31,9 @@ namespace OpenPixels.Server.Renderers
             Contract.Requires(data != null);
 
             if (_byteLimit > 0)
-                data = data.Take(_byteLimit).ToArray();
+                data = data.Take(_byteLimit / 2).ToArray();
 
-            _writer.WriteLine(BitConverter.ToString(data));
+            _writer.WriteLine("[{0,2}] " + BitConverter.ToString(data).Replace("-",""), Channel);
         }
     }
 }

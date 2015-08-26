@@ -17,10 +17,12 @@ namespace OpenPixels.Server.OPC
     public class OpcClientSession : IWorker
     {
         private readonly System.Net.Sockets.TcpClient _client;
+        private readonly ILog _log;
 
-        public OpcClientSession(System.Net.Sockets.TcpClient client)
+        public OpcClientSession(System.Net.Sockets.TcpClient client, ILog log = null)
         {
             _client = client;
+            _log = log ?? NullLogger.Instance;
         }
 
         public event EventHandler<OpcMessage> MessageReceived;
@@ -35,24 +37,24 @@ namespace OpenPixels.Server.OPC
         {
             try
             {
-                Console.WriteLine("Starting up client");
+                _log.DebugFormat("Starting up client");
                 var stream = _client.GetStream();
                 while (!token.IsCancellationRequested)
                 {
                     // Handle message header
-                    Console.WriteLine("Wait for header...");
+                    _log.Verbose("Wait for header...");
                     var header = new byte[4];
                     if (!await stream.TryReadAsync(header).ConfigureAwait(false))
                     {
-                        Console.WriteLine("Aborting - header not read");
+                        _log.Warn("Aborting - header not read");
                         return;
                     }
-                    Console.WriteLine("Got header");
+                    _log.Verbose("Got header");
 
                     var message = new OpcMessage()
                     {
                         Channel = header[0],
-                        Command = header[1],
+                        Command = (OpcCommandType)header[1],
                         Length = ReadUInt16(header, 2),
                         Data = new byte[0],
                     };
@@ -60,7 +62,7 @@ namespace OpenPixels.Server.OPC
                     // Handle message payload
                     if (message.Length > 0)
                     {
-                        Console.WriteLine("Wait for content of {0}...", message.Length);
+                        _log.VerboseFormat("Wait for content of {0}...", message.Length);
 
                         // read in message content
                         // slightly rubbish impl. - just use one big array
@@ -68,10 +70,10 @@ namespace OpenPixels.Server.OPC
                         var data = new byte[message.Length];
                         if (!await stream.TryReadAsync(data).ConfigureAwait(false))
                         {
-                            Console.WriteLine("Aborting - body not read");
+                            _log.Warn("Aborting - body not read");
                             return;
                         }
-                        Console.WriteLine("Got message content of {0}", message.Length);
+                        _log.VerboseFormat("Got message content of {0}", message.Length);
 
                         message.Data = data;
                     }
@@ -97,7 +99,7 @@ namespace OpenPixels.Server.OPC
             }
         }
 
-        private ushort ReadUInt16(byte[] header, int startIndex)
+        internal static ushort ReadUInt16(byte[] header, int startIndex)
         {
             return EndianConverter.BigEndianConverter.ToUInt16(header, startIndex);
         }

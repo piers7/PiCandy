@@ -7,14 +7,20 @@ using System.Threading.Tasks;
 
 namespace OpenPixels.Server.OPC
 {
-    class OpcCommandListener : ICommandSource, IDisposable
+    /// <summary>
+    /// Services a <see cref="SimpleSocketServer"/> with <see cref="OpcClientSession"/>s,
+    /// and raises the commands received as events for general consumption
+    /// </summary>
+    public class OpcCommandListener : ICommandSource, IDisposable
     {
-        SimpleSocketServer<OpcClientSession> _listener;
+        readonly SimpleSocketServer<OpcClientSession> _listener;
+        readonly ILog _log;
 
-        public OpcCommandListener(IPEndPoint endpoint)
+        public OpcCommandListener(IPEndPoint endpoint, ILog log = null)
         {
+            _log = log ?? NullLogger.Instance;
             _listener = new SimpleSocketServer<OpcClientSession>(endpoint, 
-                c => new OpcClientSession(c),
+                c => new OpcClientSession(c, log),
                 s => s.DoWorkAsync
             );
             _listener.ClientConnected += HandleClientConnected;
@@ -27,23 +33,51 @@ namespace OpenPixels.Server.OPC
 
         private void HandleMessageReceived(object sender, OpcMessage e)
         {
+            // Expose the raw message (debugging / tests)
+            OnMessageReceived(e);
+
+            // Also expose the system-level command
             switch (e.Command)
             {
-                case 0:
-                    OnExecuteCommand(c =>
-                    {
-                        if (c.Channel == e.Channel)
-                            c.SetPixels(e.Data);
-                    });
+                case OpcCommandType.SetPixels:
+                    OnCommandAvailable(e.Channel, r => r.SetPixels(e.Data));
+                    break;
+
+                case OpcCommandType.SystemExclusive:{
+                    // Payload starts with a system ID 0x00 0x01 = FadeCandy
+                    // It seems to have 2 byte 'command id' for these:
+                    // 01 - color correction
+                    // 02 - firmware config
+                    var systemId = OpcClientSession.ReadUInt16(e.Data, 0);
+                    _log.WarnFormat("System-specific command for {0:x4} not handled", systemId);
+                   break;
+                }
+
+                default:
+                    _log.WarnFormat("Command {0}-{1} unhandled", e.Channel, e.Command);
                     break;
             };
         }
 
-        public event EventHandler<Action<IPixelRenderer>> ExecuteCommand;
+        public event EventHandler<OpcMessage> MessageReceived;
 
-        private void OnExecuteCommand(Action<IPixelRenderer> action)
+        private void OnMessageReceived(OpcMessage message)
         {
-            var handler = ExecuteCommand;
+            var handler = MessageReceived;
+            if (handler != null) handler(this, message);
+        }
+
+        public event EventHandler<ICommand> CommandAvailable;
+
+        private void OnCommandAvailable(int channel, Action<IPixelRenderer> action)
+        {
+            var command = new DelegateCommand(channel, action);
+            OnCommandAvailable(command);
+        }
+
+        private void OnCommandAvailable(ICommand action)
+        {
+            var handler = CommandAvailable;
             if (handler != null) handler(this, action);
         }
 

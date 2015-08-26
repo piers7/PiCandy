@@ -54,12 +54,11 @@ namespace OpenPixels.Server.Logging
         /// </summary>
         void registration_Preparing(object sender, PreparingEventArgs e)
         {
-            var limitType = e.Component.Target.Activator.LimitType;
             e.Parameters = e.Parameters
                 .Concat(new[]{
                     new ResolvedParameter(
                         (p,context) => p.ParameterType == typeof(TLogger),
-                        (p,context) => _logFactory(limitType)
+                        (p,context) => _logFactory(p.Member.DeclaringType)
                     )
                 });
         }
@@ -74,7 +73,7 @@ namespace OpenPixels.Server.Logging
         /// within autofac itself</remarks>
         void registration_Activated(object sender, ActivatedEventArgs<object> e)
         {
-            var limitType = e.Component.Target.Activator.LimitType;
+            var limitType = e.Instance.GetType();
 
             // Lazy so that we only bother creating the logger
             // for types that actually have a TLogger property

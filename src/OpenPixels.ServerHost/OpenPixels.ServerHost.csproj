@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="Logging\Log4NetWrapper.cs" />
     <Compile Include="Logging\LogInjectionModule.cs" />
-    <Compile Include="OpenPixelsServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

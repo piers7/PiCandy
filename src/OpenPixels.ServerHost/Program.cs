@@ -45,7 +45,8 @@ namespace OpenPixels.ServerHost
             var builder = new ContainerBuilder();
 
             // Add core services
-            builder.RegisterType<OpenPixelsServer>()
+            builder
+                .RegisterType<OpenPixelsServer>()
                 .SingleInstance()
                 ;
 

@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace OpenPixels.Server
 {
-    /// <summary>
-    /// Allows control of actual pixel-rendering hardware
-    /// </summary>
-    public interface IPixelRenderer
+    public interface ICommand
     {
         int Channel { get; }
-        void SetPixels(byte[] data);
+        Action<IPixelRenderer> Execute { get; }
     }
 }

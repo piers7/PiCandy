@@ -1,5 +1,4 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +27,7 @@ namespace OpenPixels.Server
 
             // Hook up to all listeners
             foreach (var listener in _sources)
-                listener.ExecuteCommand += DispatchCommand;
+                listener.CommandAvailable += DispatchCommand;
         }
 
         public IEnumerable<ICommandSource> Sources
@@ -41,16 +40,16 @@ namespace OpenPixels.Server
             get { return _renderers; }
         }
 
-        private void DispatchCommand(object sender, Action<IPixelRenderer> command)
+        private void DispatchCommand(object sender, ICommand command)
         {
-            foreach (var renderer in _renderers)
-                command(renderer);
+            foreach (var renderer in _renderers.Where(r => r.Channel == command.Channel))
+                command.Execute(renderer);
         }
 
         public void Dispose()
         {
             foreach (var listener in _sources)
-                listener.ExecuteCommand -= DispatchCommand;
+                listener.CommandAvailable -= DispatchCommand;
         }
     }
 }

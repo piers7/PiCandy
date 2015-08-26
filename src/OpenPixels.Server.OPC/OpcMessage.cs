@@ -9,7 +9,7 @@ namespace OpenPixels.Server.OPC
     public struct OpcMessage
     {
         public byte Channel;
-        public byte Command;
+        public OpcCommandType Command;
         public ushort Length;
         public byte[] Data;
 
@@ -17,7 +17,7 @@ namespace OpenPixels.Server.OPC
         {
             return string.Format("{0} {1} {2}"
                 ,Channel
-                ,Command
+                ,(byte)Command
                 ,Length
                 //,string.Join(" ", Data.Select(b => b.ToString("x2")))
                 )
@@ -28,7 +28,7 @@ namespace OpenPixels.Server.OPC
         {
             return string.Format("{0} {1} {2} {3}"
                 , Channel
-                , Command
+                , (byte)Command
                 , Length
                 , BitConverter.ToString(Data.Take(numberOfPayloadBytesShown).ToArray())
                 //.Select(b => b.ToString("x2")))
