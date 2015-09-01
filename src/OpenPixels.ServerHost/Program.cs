@@ -24,8 +24,8 @@ namespace OpenPixels.ServerHost
             try
             {
                 _log = GetLogger(typeof(Program));
-                var container = CreateContainer(GetLogger);
-                return Run(container);
+                using(var container = CreateContainer(GetLogger))
+                    return Run(container);
             }
             finally
             {

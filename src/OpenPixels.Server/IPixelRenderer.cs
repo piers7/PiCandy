@@ -11,7 +11,6 @@ namespace OpenPixels.Server
     /// </summary>
     public interface IPixelRenderer
     {
-        int Channel { get; }
         void SetPixels(byte[] data);
     }
 }

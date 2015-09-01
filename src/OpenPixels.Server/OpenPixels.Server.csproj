@@ -42,11 +42,11 @@
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="ILog.cs" />
-    <Compile Include="IRunnable.cs" />
+    <Compile Include="IPixelChannel.cs" />
+    <Compile Include="PixelChannel.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="OpenPixelsServer.cs" />
     <Compile Include="SimpleSocketServer.cs" />
-    <Compile Include="Renderers\ConsoleRenderer.cs" />
     <Compile Include="Renderers\TextWriterRenderer.cs" />
     <Compile Include="ICommandSource.cs" />
     <Compile Include="IPixelRenderer.cs" />

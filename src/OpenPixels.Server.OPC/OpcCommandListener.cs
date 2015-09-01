@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenPixels.Server.OPC
@@ -19,16 +20,32 @@ namespace OpenPixels.Server.OPC
         public OpcCommandListener(IPEndPoint endpoint, ILog log = null)
         {
             _log = log ?? NullLogger.Instance;
-            _listener = new SimpleSocketServer<OpcClientSession>(endpoint, 
-                c => new OpcClientSession(c, log),
-                s => s.DoWorkAsync
+            _listener = new SimpleSocketServer<OpcClientSession>(
+                endpoint, 
+                CreateSession,
+                log
             );
             _listener.ClientConnected += HandleClientConnected;
         }
 
-        private void HandleClientConnected(object sender, OpcClientSession e)
+        private OpcClientSession CreateSession(System.Net.Sockets.TcpClient client)
         {
-            e.MessageReceived += HandleMessageReceived;
+            return new OpcClientSession(client, _log);
+        }
+
+        private void HandleClientConnected(object sender, OpcClientSession session)
+        {
+            var cancel = new CancellationTokenSource();
+            Task.Run(async () =>
+            {
+                OpcMessage message;
+                do
+                {
+                    message = await session.ReadMessageAsync(cancel.Token);
+                } while (message != null);
+            });
+
+            session.MessageReceived += HandleMessageReceived;
         }
 
         private void HandleMessageReceived(object sender, OpcMessage e)
@@ -40,6 +57,7 @@ namespace OpenPixels.Server.OPC
             switch (e.Command)
             {
                 case OpcCommandType.SetPixels:
+                    _log.VerboseFormat("Dispatch SetPixels(byte[{1}]) to channel {0}", e.Channel, e.Data.Length);
                     OnCommandAvailable(e.Channel, r => r.SetPixels(e.Data));
                     break;
 

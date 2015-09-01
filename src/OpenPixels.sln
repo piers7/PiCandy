@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.Server", "OpenPi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.ServerHost", "OpenPixels.ServerHost\OpenPixels.ServerHost.csproj", "{40F7F5A1-CE47-46E4-AAA9-29FBDE025AFF}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327} = {6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}
 		{5D16A046-C545-447F-B944-89C91943F4C6} = {5D16A046-C545-447F-B944-89C91943F4C6}
 	EndProjectSection
 EndProject
@@ -19,6 +20,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.Server.UnitTests", "OpenPixels.Server.UnitTests\OpenPixels.Server.UnitTests.csproj", "{7CA3EAA3-D72E-4EA7-9236-0ACEB4B461D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.Server.OPC.Tests", "OpenPixels.Server.OPC.Tests\OpenPixels.Server.OPC.Tests.csproj", "{4EC946ED-D9F1-420A-B814-51189141B784}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPixels.Renderer.RpiWs2812", "OpenPixels.Renderer.RpiWs2812\OpenPixels.Renderer.RpiWs2812.csproj", "{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpiWs2812OpcServer", "RpiWs2812OpcServer\RpiWs2812OpcServer.csproj", "{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +55,14 @@ Global
 		{4EC946ED-D9F1-420A-B814-51189141B784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EC946ED-D9F1-420A-B814-51189141B784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EC946ED-D9F1-420A-B814-51189141B784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +71,6 @@ Global
 		{82E94BE8-BF52-4E39-A0E6-5A8A255E37C4} = {B819640F-7932-4D6C-B211-28FA7290484D}
 		{7CA3EAA3-D72E-4EA7-9236-0ACEB4B461D6} = {B819640F-7932-4D6C-B211-28FA7290484D}
 		{4EC946ED-D9F1-420A-B814-51189141B784} = {B819640F-7932-4D6C-B211-28FA7290484D}
+		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92} = {B819640F-7932-4D6C-B211-28FA7290484D}
 	EndGlobalSection
 EndGlobal

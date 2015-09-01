@@ -11,48 +11,46 @@ using System.Threading.Tasks;
 namespace OpenPixels.Server.OPC
 {
     /// <summary>
-    /// A simple socket server which services each incomming connection
+    /// A simple socket server which services each incoming connection
     /// with a new instance of <typeparam name="TClient"/>
     /// </summary>
     public class SimpleSocketServer<TClient> : IDisposable
     {
         public delegate TClient CreateWorker(TcpClient client);
-        public delegate Func<CancellationToken, Task> RunWorkerAsync(TClient worker);
 
         private readonly IPEndPoint _endpoint;
         private readonly CancellationTokenSource _cts;
-        private TcpListener _listener;
+        private readonly TcpListener _listener;
         private readonly CreateWorker _createWorker;
-        private readonly RunWorkerAsync _getRunWorkerAction;
+        private readonly ILog _log;
 
-        public SimpleSocketServer(IPAddress ipAddress, int port,
+        public SimpleSocketServer(
+            IPAddress ipAddress, int port,
             CreateWorker createWorker,
-            RunWorkerAsync runWorkerAsync
+            ILog log = null
         )
-            : this(new IPEndPoint(ipAddress, port), createWorker, runWorkerAsync)
+            : this(new IPEndPoint(ipAddress, port), createWorker, log)
         {
         }
 
         public SimpleSocketServer(IPEndPoint endpoint,
             CreateWorker createWorker,
-            RunWorkerAsync runWorkerAsync
+            ILog log = null
             )
         {
             _endpoint = endpoint;
             _cts = new CancellationTokenSource();
             _createWorker = createWorker;
-            _getRunWorkerAction = runWorkerAsync;
 
-            Log = NullLogger.Instance;
+            _log = log ?? NullLogger.Instance;
 
-            Log.Debug("Starting up listener");
+            _log.Debug("Starting up listener");
             _listener = new TcpListener(_endpoint);
             _listener.Start();
 
             Task.Run(() => AcceptClients(_cts.Token), _cts.Token);
         }
 
-        public ILog Log { get; set; }
         public IPEndPoint EndPoint { get { return _endpoint; } }
 
         public event EventHandler<TClient> ClientConnected;
@@ -77,20 +75,17 @@ namespace OpenPixels.Server.OPC
 
                     var worker = _createWorker(client);
                     OnClientConnected(worker);
-
-                    var runWorkerAsync = _getRunWorkerAction(worker);
-                    Task.Run(() => runWorkerAsync(token), token);
                 }
             }
             finally
             {
-                Log.Debug("AcceptClients loop stopping");
+                _log.Debug("AcceptClients loop stopping");
             }
         }
 
         public void Dispose()
         {
-            Log.Debug("Shutting down listener");
+            _log.Debug("Shutting down listener");
             _cts.Cancel();
             _listener.Stop();
         }

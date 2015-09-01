@@ -19,9 +19,10 @@ namespace OpcListenerConsole
             if (!(args.Length > 0 && int.TryParse(args[0], out port)))
                 port = defaultPort;
 
-            using (var listener = new SimpleSocketServer<OpcClientSession>(IPAddress.Any, port, 
-                client => new OpcClientSession(client),
-                session => session.DoWorkAsync
+            using (var listener = new SimpleSocketServer<OpcClientSession>(
+                IPAddress.Any, 
+                port, 
+                client => new OpcClientSession(client)
                 ))
             {
                 listener.ClientConnected += HandleClientConnected;

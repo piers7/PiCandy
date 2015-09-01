@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenPixels.Server.OPC
 {
-    public struct OpcMessage
+    public class OpcMessage
     {
         public byte Channel;
         public OpcCommandType Command;

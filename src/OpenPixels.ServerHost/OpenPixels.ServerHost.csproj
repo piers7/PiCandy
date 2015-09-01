@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleRendererModule.cs" />
     <Compile Include="Logging\Log4NetWrapper.cs" />
     <Compile Include="Logging\LogInjectionModule.cs" />
     <Compile Include="Program.cs" />
@@ -61,6 +62,7 @@
     <None Include="app.config" />
     <None Include="components.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -54,14 +54,14 @@ namespace OpenPixels.Server.OPC
 
                 var message = messages[0];
                 Assert.Equal(5, message.Channel);
-                Assert.Equal(7, message.Command);
+                Assert.Equal(7, (int)message.Command);
                 Assert.Equal(2, message.Length);
                 Assert.Equal(2, message.Data.Length);
                 Assert.Equal(new byte[] { 0x01, 0x02 }, message.Data);
 
                 message = messages[1];
                 Assert.Equal(3, message.Channel);
-                Assert.Equal(4, message.Command);
+                Assert.Equal(4, (int)message.Command);
                 Assert.Equal(3, message.Length);
                 Assert.Equal(3, message.Data.Length);
                 Assert.Equal(new byte[] { 0x01, 0x02, 0x03 }, message.Data);

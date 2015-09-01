@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace OpenPixels.Server
 {
+    /// <summary>
+    /// Represents a request within the system to render pixels on a device
+    /// </summary>
     public interface ICommand
     {
         int Channel { get; }

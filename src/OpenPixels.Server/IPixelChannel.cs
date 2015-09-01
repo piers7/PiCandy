@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenPixels.Server
 {
-    public interface IWorker
+    public interface IPixelChannel
     {
-        Task DoWorkAsync(CancellationToken cancellationToken);
+        int Channel { get; }
+        IPixelRenderer Renderer { get; }
     }
 }
