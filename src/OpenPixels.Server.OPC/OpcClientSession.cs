@@ -43,6 +43,7 @@ namespace OpenPixels.Server.OPC
             if (handler != null) handler(this, message);
         }
 
+        [Obsolete("Get rid of this off the session directly")]
         internal async Task ReadAllMessagesAsync(CancellationToken token)
         {
             // TODO: Refactor this later
@@ -50,7 +51,7 @@ namespace OpenPixels.Server.OPC
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var message = await ReadMessageAsync(token);
+                    var message = await ReadMessageAsync(token).ConfigureAwait(false);
                     if (message == null)
                         return;
                 }
@@ -96,7 +97,7 @@ namespace OpenPixels.Server.OPC
             // Handle message payload
             if (message.Length > 0)
             {
-                _log.VerboseFormat("Wait for content of {0}...", message.Length);
+                _log.VerboseFormat("Wait for content of {0}b...", message.Length);
 
                 // read in message content
                 // slightly rubbish impl. - just use one big array
@@ -107,7 +108,7 @@ namespace OpenPixels.Server.OPC
                     _log.Warn("Aborting - body not read");
                     return null;
                 }
-                _log.VerboseFormat("Got message content of {0}", message.Length);
+                _log.VerboseFormat("Got message content of {0}b", message.Length);
 
                 message.Data = data;
             }

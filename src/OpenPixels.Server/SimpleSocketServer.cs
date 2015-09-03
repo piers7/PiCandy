@@ -67,9 +67,7 @@ namespace OpenPixels.Server.OPC
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var client = await _listener.AcceptTcpClientAsync()
-                        .ConfigureAwait(false)
-                        ;
+                    var client = await _listener.AcceptTcpClientAsync().ConfigureAwait(false);
                     if (client == null)
                         return;
 

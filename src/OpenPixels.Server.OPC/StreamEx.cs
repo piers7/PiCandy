@@ -15,9 +15,9 @@ namespace OpenPixels.Server.OPC
         /// Fills a buffer from a stream, using a series of continuations
         /// if partial reads are received. This takes care of network fragmentation issues.
         /// </summary>
-        public static async Task<bool> TryReadAsync(this Stream stream, byte[] buffer, CancellationToken token)
+        public static Task<bool> TryReadAsync(this Stream stream, byte[] buffer, CancellationToken token)
         {
-            return await TryReadAsync(stream, buffer, 0, buffer.Length, token);
+            return TryReadAsync(stream, buffer, 0, buffer.Length, token);
         }
 
         /// <summary>

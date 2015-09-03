@@ -87,6 +87,15 @@ namespace OpenPixels.ServerHost
                         Console.WriteLine("\t{0} ({1})", address.Address, iface.Name);
                 }
 
+                foreach (var item in server.Renderers)
+                {
+                    Console.WriteLine("Running self-test on {0}", item);
+                    item.Renderer.SetPixelColor(0, 0xFF, 0x00, 0x00);
+                    item.Renderer.SetPixelColor(1, 0x00, 0xFF, 0x00);
+                    item.Renderer.SetPixelColor(2, 0x00, 0x00, 0xFF);
+
+                }
+
                 Console.WriteLine("Press ENTER to shutdown");
                 Console.ReadLine();
             }

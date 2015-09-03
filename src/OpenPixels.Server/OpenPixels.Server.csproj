@@ -46,10 +46,11 @@
     <Compile Include="PixelChannel.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="OpenPixelsServer.cs" />
+    <Compile Include="Renderers\RendererEx.cs" />
     <Compile Include="SimpleSocketServer.cs" />
     <Compile Include="Renderers\TextWriterRenderer.cs" />
     <Compile Include="ICommandSource.cs" />
-    <Compile Include="IPixelRenderer.cs" />
+    <Compile Include="Renderers\IPixelRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

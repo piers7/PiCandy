@@ -11,6 +11,13 @@ namespace OpenPixels.Server
     /// </summary>
     public interface IPixelRenderer
     {
+        int PixelCount { get; }
+
+        void Clear();
+
+        void SetPixelColor(int index, byte r, byte g, byte b);
         void SetPixels(byte[] data);
+
+        void Show();
     }
 }

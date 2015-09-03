@@ -41,7 +41,7 @@ namespace OpenPixels.Server.OPC
                 OpcMessage message;
                 do
                 {
-                    message = await session.ReadMessageAsync(cancel.Token);
+                    message = await session.ReadMessageAsync(cancel.Token).ConfigureAwait(false);
                 } while (message != null);
             });
 
