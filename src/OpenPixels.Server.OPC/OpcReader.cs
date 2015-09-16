@@ -15,19 +15,19 @@ namespace OpenPixels.Server.OPC
     /// using the OPC protocol (typically NetworkStream).
     /// The session will live until the session is closed.
     /// </summary>
-    public class OpcClientSession : IDisposable
+    public class OpcReader : IDisposable
     {
         private readonly Stream _stream;
         private readonly EndPoint _localEndpoint;
         private readonly EndPoint _remoteEndpoint;
         private readonly ILog _log;
 
-        public OpcClientSession(TcpClient client, ILog log = null)
+        public OpcReader(TcpClient client, ILog log = null)
             :this(client.GetStream(), client.Client.LocalEndPoint, client.Client.RemoteEndPoint, log)
         {
         }
 
-        public OpcClientSession(Stream stream, EndPoint localEndpoint, EndPoint remoteEndpoint, ILog log = null)
+        public OpcReader(Stream stream, EndPoint localEndpoint, EndPoint remoteEndpoint, ILog log = null)
         {
             _stream = stream;
             _localEndpoint = localEndpoint;
@@ -35,42 +35,30 @@ namespace OpenPixels.Server.OPC
             _log = log ?? NullLogger.Instance;
         }
 
-        public event EventHandler<OpcMessage> MessageReceived;
-
-        protected void OnMessageReceived(OpcMessage message)
+        public static Task PumpAllMessages(OpcReader reader, CancellationToken token, Action<OpcMessage> handler)
         {
-            var handler = MessageReceived;
-            if (handler != null) handler(this, message);
-        }
-
-        [Obsolete("Get rid of this off the session directly")]
-        internal async Task ReadAllMessagesAsync(CancellationToken token)
-        {
-            // TODO: Refactor this later
-            try
+            return Task.Run(async () =>
             {
-                while (!token.IsCancellationRequested)
+                OpcMessage? message;
+                do
                 {
-                    var message = await ReadMessageAsync(token).ConfigureAwait(false);
-                    if (message == null)
-                        return;
-                }
-            }
-            finally
-            {
-                _stream.Close();
-                // should really raise ClientDisconnected here
-                // or swap to using RX
-            }
+                    message = await reader.ReadMessageAsync(token).ConfigureAwait(false);
+                    if (message != null)
+                        handler(message.Value);
+                } while (message != null && !token.IsCancellationRequested);
+
+                reader.Dispose();
+
+            }, token);
         }
 
-        public Task<OpcMessage> ReadMessageAsync()
+        public Task<OpcMessage?> ReadMessageAsync()
         {
             var ignored = new CancellationTokenSource();
             return ReadMessageAsync(ignored.Token);
         }
 
-        public async Task<OpcMessage> ReadMessageAsync(CancellationToken token)
+        public async Task<OpcMessage?> ReadMessageAsync(CancellationToken token)
         {
             if (token.IsCancellationRequested) return null;
 
@@ -112,12 +100,6 @@ namespace OpenPixels.Server.OPC
 
                 message.Data = data;
             }
-
-            // Broadcast message for handling
-            OnMessageReceived(message);
-
-            // If the client keeps the socket open, 
-            // we can loop round and read more messages
             return message;
         }
 

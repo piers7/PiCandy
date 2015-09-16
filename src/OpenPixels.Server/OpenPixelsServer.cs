@@ -13,22 +13,29 @@ namespace OpenPixels.Server
     public class OpenPixelsServer : IDisposable
     {
         readonly IEnumerable<ICommandSource> _sources;
-        readonly IEnumerable<IPixelChannel> _renderers;
+        readonly ILookup<int, IPixelRenderer> _channels;
         readonly ILog _log;
 
         public OpenPixelsServer(
             IEnumerable<ICommandSource> sources,
-            IEnumerable<IPixelChannel> renderers,
+            IEnumerable<Lazy<IPixelRenderer, ChannelInfo>> channels,
             ILog log
             )
         {
             _sources = sources;
-            _renderers = renderers;
+            _channels = channels.ToLookup(
+                c => c.Meta.Channel,
+                c => c.Value
+                );
             _log = log;
 
             // Hook up to all listeners
             foreach (var listener in _sources)
                 listener.CommandAvailable += DispatchCommand;
+
+            // sanity check
+            if (!_channels.Any())
+                throw new InvalidOperationException("No channels configured");
         }
 
         public IEnumerable<ICommandSource> Sources
@@ -36,17 +43,18 @@ namespace OpenPixels.Server
             get { return _sources; }
         }
 
-        public IEnumerable<IPixelChannel> Renderers
+        public ILookup<int, IPixelRenderer> Channels
         {
-            get { return _renderers; }
+            get { return _channels; }
         }
 
         private void DispatchCommand(object sender, ICommand command)
         {
-            foreach (var renderer in _renderers.Where(r => r.Channel == command.Channel))
+            var renderers = _channels[command.Channel];
+            foreach (var renderer in renderers)
             {
                 _log.VerboseFormat("Dispatch {0} to {1}", command, renderer);
-                command.Execute(renderer.Renderer);
+                command.Execute(renderer);
             }
         }
 
@@ -54,6 +62,9 @@ namespace OpenPixels.Server
         {
             foreach (var listener in _sources)
                 listener.CommandAvailable -= DispatchCommand;
+
+            foreach (var renderer in _channels.SelectMany(c => c))
+                renderer.Clear();
         }
     }
 }

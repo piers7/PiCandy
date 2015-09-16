@@ -6,11 +6,37 @@ using System.Threading.Tasks;
 
 namespace OpenPixels.Server.OPC
 {
-    public class OpcMessage
+    /// <summary>
+    /// A message in the Open Pixel Control protocol format
+    /// </summary>
+    /// <remarks>See http://openpixelcontrol.org/ </remarks>
+    public struct OpcMessage
     {
+        /// <summary>
+        /// Target channel. Note the doco says that channel 0 should be used as a broadcast channel
+        /// </summary>
         public byte Channel;
+
+        /// <summary>
+        /// The type of operation being performed
+        /// </summary>
         public OpcCommandType Command;
+
+        /// <summary>
+        /// The length of the attached data payload.
+        /// </summary>
         public ushort Length;
+
+        /// <summary>
+        /// A series of r,g,b bytes representing the data to set.
+        /// </summary>
+        /// <remarks>
+        /// From the site:
+        /// The data block contains 8-bit RGB values: three bytes in red, green, blue order for each pixel to set. 
+        /// If the data block has length 3*n, then the first n pixels of the specified channel are set. 
+        /// All other pixels are unaffected and retain their current colour values. 
+        /// If the data length is not a multiple of 3, or there is data for more pixels than are present, the extra data is ignored
+        /// </remarks>
         public byte[] Data;
 
         public override string ToString()

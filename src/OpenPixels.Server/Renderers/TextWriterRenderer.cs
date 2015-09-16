@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,39 +16,42 @@ namespace OpenPixels.Server.Renderers
     public class TextWriterRenderer : IPixelChannel, IPixelRenderer
     {
         private TextWriter _writer;
-        private int _pixelCount;
         private int _byteLimit;
-        private byte[] _buffer;
+        private uint[] _buffer;
 
         public TextWriterRenderer(TextWriter writer, int pixelCount, int byteLimit = 0)
         {
             _writer = writer;
             _byteLimit = byteLimit;
-
-            // TODO: Not sure a byte[] buffer is actually the right play here
-            // think should start favoring some kind of ARGB / uint struct
-            _pixelCount = pixelCount;
-            _buffer = new byte[pixelCount*4];
+            _buffer = new uint[pixelCount];
         }
 
         public int Channel { get; set; }
 
-        public int PixelCount { get { return _pixelCount; } }
+        public int PixelCount { get { return _buffer.Length; } }
 
         public void Clear() { }
 
-        public void SetPixels(byte[] data)
+        public void SetPixels(uint[] data, int offset = 0)
         {
             Contract.Requires(data != null);
 
             _buffer = data;
         }
 
+        public uint[] GetPixels()
+        {
+            return _buffer;
+        }
+
         public void SetPixelColor(int pixel, byte r, byte g, byte b)
         {
-            _buffer[pixel * 4] = b;
-            _buffer[pixel * 4 + 1] = g;
-            _buffer[pixel * 4 + 2] = r;
+            _buffer[pixel] = (uint)Color.FromArgb(r, g, b).ToArgb();
+        }
+
+        public void SetPixelColor(int pixel, uint color)
+        {
+            _buffer[pixel] = color;
         }
 
         public void Show()
@@ -56,7 +60,7 @@ namespace OpenPixels.Server.Renderers
             if (_byteLimit > 0)
                 data = data.Take(_byteLimit / 2).ToArray();
 
-            _writer.WriteLine("[{0,2}] " + BitConverter.ToString(data).Replace("-", ""), Channel);
+            _writer.WriteLine("[{0,2}] " + string.Join(" ", data.Select(d => d.ToString("x6"))), Channel);
         }
 
         IPixelRenderer IPixelChannel.Renderer

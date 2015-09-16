@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Configuration;
+using Autofac.Features.Metadata;
 using OpenPixels.Server;
 using OpenPixels.Server.Logging;
 using System;
@@ -50,6 +51,12 @@ namespace OpenPixels.ServerHost
                 .SingleInstance()
                 ;
 
+            // map autofac's type to our internal meta type (attempting to cut off autofac reference leakage)
+            builder
+                .RegisterAdapter<Meta<Lazy<IPixelRenderer>>, Lazy<IPixelRenderer, ChannelInfo>>(
+                    meta => new Lazy<IPixelRenderer, ChannelInfo>(meta.Value, new ChannelInfo(meta.Metadata))
+                );
+
             builder.RegisterModule(new LogInjectionModule<T>(logFactory) { InjectProperties = true });
 
             // Add XML overrides
@@ -70,9 +77,9 @@ namespace OpenPixels.ServerHost
                 foreach (var item in server.Sources)
                     Console.WriteLine("\t{0}", item);
 
-                Console.WriteLine("Using the following renderers:");
-                foreach (var item in server.Renderers)
-                    Console.WriteLine("\t{0,2}: {1}", item.Channel, item);
+                Console.WriteLine("Using the following channels:");
+                foreach (var item in server.Channels.OrderBy(c => c.Key))
+                    Console.WriteLine("\t{0,2}: {1}", item.Key, string.Join(", ", item.Select(c => c.GetType().Name)));
 
                 // I don't know about you, but between the VMs and the VPNs
                 // I seem to have a *heap* many IP addresses
@@ -87,13 +94,15 @@ namespace OpenPixels.ServerHost
                         Console.WriteLine("\t{0} ({1})", address.Address, iface.Name);
                 }
 
-                foreach (var item in server.Renderers)
+                foreach (var renderer in server.Channels.SelectMany(c => c))
                 {
-                    Console.WriteLine("Running self-test on {0}", item);
-                    item.Renderer.SetPixelColor(0, 0xFF, 0x00, 0x00);
-                    item.Renderer.SetPixelColor(1, 0x00, 0xFF, 0x00);
-                    item.Renderer.SetPixelColor(2, 0x00, 0x00, 0xFF);
-
+                    Console.WriteLine("Running self-test on {0}", renderer);
+                    renderer.SetPixelColor(0, 0xFF, 0x00, 0x00);
+                    renderer.SetPixelColor(1, 0x00, 0xFF, 0x00);
+                    renderer.SetPixelColor(2, 0x00, 0x00, 0xFF);
+                    renderer.SetPixelColor(3, 0xFF, 0x00, 0x00);
+                    renderer.SetPixelColor(4, 0x00, 0xFF, 0x00);
+                    renderer.SetPixelColor(5, 0x00, 0x00, 0xFF);
                 }
 
                 Console.WriteLine("Press ENTER to shutdown");

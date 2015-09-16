@@ -36,14 +36,17 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EndianConverter.cs" />
-    <Compile Include="OpcClientSession.cs" />
+    <Compile Include="OpcReader.cs" />
     <Compile Include="OpcCommandListener.cs" />
     <Compile Include="OpcCommandType.cs" />
     <Compile Include="OpcListenerModule.cs" />
     <Compile Include="OpcMessage.cs" />
+    <Compile Include="OpcStreamEx.cs" />
+    <Compile Include="OpcWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamEx.cs" />
   </ItemGroup>

@@ -19,14 +19,12 @@ namespace OpcListenerConsole
             if (!(args.Length > 0 && int.TryParse(args[0], out port)))
                 port = defaultPort;
 
-            using (var listener = new SimpleSocketServer<OpcClientSession>(
+            using (var listener = new SimpleSocketServer<OpcReader>(
                 IPAddress.Any, 
                 port, 
-                client => new OpcClientSession(client)
+                CreateClient
                 ))
             {
-                listener.ClientConnected += HandleClientConnected;
-
                 WriteEndpointsBanner(port);
 
                 Console.WriteLine("Press RETURN to close server");
@@ -34,13 +32,15 @@ namespace OpcListenerConsole
             }
         }
 
-        private static void HandleClientConnected(object sender, OpcClientSession client)
+        private static OpcReader CreateClient(System.Net.Sockets.TcpClient client)
         {
-            Console.WriteLine("Handling client connect from {0}", client.RemoteEndPoint);
-            client.MessageReceived += HandleMessageReceived;
+            Console.WriteLine("Handling client connect from {0}", client.Client.RemoteEndPoint);
+            var reader = new OpcReader(client);
+
+            return reader;
         }
 
-        private static void HandleMessageReceived(object sender, OpcMessage message)
+        private static void HandleMessageReceived(OpcMessage message)
         {
             Console.WriteLine(message.ToString(12));
         }
