@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenPixels.Server.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,20 +14,23 @@ namespace OpenPixels.Server
     public class OpenPixelsServer : IDisposable
     {
         readonly IEnumerable<ICommandSource> _sources;
-        readonly ILookup<int, IPixelRenderer> _channels;
+        readonly ILookup<int, Lazy<IPixelRenderer>> _channels;
+        readonly Func<string, IPositionalMap> _getMap;
         readonly ILog _log;
 
         public OpenPixelsServer(
             IEnumerable<ICommandSource> sources,
-            IEnumerable<Lazy<IPixelRenderer, ChannelInfo>> channels,
-            ILog log
+            IEnumerable<Lazy<IPixelRenderer, ChannelMetadata>> channels,
+            Func<string, IPositionalMap> getMap,
+            ILog log = null
             )
         {
             _sources = sources;
             _channels = channels.ToLookup(
                 c => c.Meta.Channel,
-                c => c.Value
+                c => GetRenderer(c)
                 );
+            _getMap = getMap;
             _log = log;
 
             // Hook up to all listeners
@@ -38,19 +42,34 @@ namespace OpenPixels.Server
                 throw new InvalidOperationException("No channels configured");
         }
 
+        private Lazy<IPixelRenderer> GetRenderer(Lazy<IPixelRenderer, ChannelMetadata> c)
+        {
+            return new Lazy<IPixelRenderer>(() =>
+            {
+                if (!string.IsNullOrEmpty(c.Meta.Map))
+                {
+                    var renderer = c.Value;
+                    var map = _getMap(c.Meta.Map);
+                    var adapter = new MappedPixelsDecorator(renderer, map.GetMappedIndex);
+                    return adapter;
+                }
+                return c.Value;
+            });
+        }
+
         public IEnumerable<ICommandSource> Sources
         {
             get { return _sources; }
         }
 
-        public ILookup<int, IPixelRenderer> Channels
+        public ILookup<int, Lazy<IPixelRenderer>> Channels
         {
             get { return _channels; }
         }
 
         public IEnumerable<IPixelRenderer> AllRenderers
         {
-            get { return Channels.SelectMany(c => c); }
+            get { return Channels.SelectMany(c => c.Select(v => v.Value)); }
         }
 
         private void DispatchCommand(object sender, ICommand command)
@@ -58,8 +77,8 @@ namespace OpenPixels.Server
             var renderers = _channels[command.Channel];
             foreach (var renderer in renderers)
             {
-                _log.VerboseFormat("Dispatch {0} to {1}", command, renderer);
-                command.Execute(renderer);
+                _log.VerboseFormat("Dispatch {0} to {1}", command, renderer.Value);
+                command.Execute(renderer.Value);
             }
         }
 

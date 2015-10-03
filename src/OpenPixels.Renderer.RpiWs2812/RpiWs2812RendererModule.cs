@@ -73,7 +73,7 @@ namespace OpenPixels.Renderer.RpiWs2812
                 .RegisterType<RpiWs281xClient>()
                 .WithParameter(TypedParameter.From(_settings))
                 .As<IPixelRenderer>()
-                .WithMetadata<ChannelInfo>(m =>
+                .WithMetadata<ChannelMetadata>(m =>
                     m.For(am => am.Channel, Channel)
                 )
                 ;

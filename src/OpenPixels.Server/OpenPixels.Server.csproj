@@ -40,14 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelInfo.cs" />
+    <Compile Include="ChannelMetadata.cs" />
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="Filters\IPositionalMap.cs" />
+    <Compile Include="Filters\ZigZagPositionalMap.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="IPixelChannel.cs" />
     <Compile Include="Lazy.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="OpenPixelsServer.cs" />
+    <Compile Include="MappedPixelsDecorator.cs" />
     <Compile Include="Renderers\RendererEx.cs" />
     <Compile Include="SimpleSocketServer.cs" />
     <Compile Include="Renderers\TextWriterRenderer.cs" />

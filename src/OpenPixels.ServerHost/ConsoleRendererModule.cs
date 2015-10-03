@@ -21,7 +21,7 @@ namespace OpenPixels.Server
                     Channel = Channel
                 })
                 .As<IPixelRenderer>()
-                .WithMetadata<ChannelInfo>(m => 
+                .WithMetadata<ChannelMetadata>(m => 
                     m.For(am => am.Channel, Channel)
                 )
                 ;

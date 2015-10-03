@@ -2,6 +2,7 @@
 using Autofac.Configuration;
 using Autofac.Features.Metadata;
 using OpenPixels.Server;
+using OpenPixels.Server.Filters;
 using OpenPixels.Server.Logging;
 using System;
 using System.Collections.Generic;
@@ -51,10 +52,15 @@ namespace OpenPixels.ServerHost
                 .SingleInstance()
                 ;
 
+            builder.Register<Func<string,IPositionalMap>>(c => {
+                var scope = c.Resolve<ILifetimeScope>();
+                return scope.ResolveNamed<IPositionalMap>;
+            });
+
             // map autofac's type to our internal meta type (attempting to cut off autofac reference leakage)
             builder
-                .RegisterAdapter<Meta<Lazy<IPixelRenderer>>, Lazy<IPixelRenderer, ChannelInfo>>(
-                    meta => new Lazy<IPixelRenderer, ChannelInfo>(meta.Value, new ChannelInfo(meta.Metadata))
+                .RegisterAdapter<Meta<Lazy<IPixelRenderer>>, Lazy<IPixelRenderer, ChannelMetadata>>(
+                    meta => new Lazy<IPixelRenderer, ChannelMetadata>(meta.Value, new ChannelMetadata(meta.Metadata))
                 );
 
             builder.RegisterModule(new LogInjectionModule<T>(logFactory) { InjectProperties = true });
