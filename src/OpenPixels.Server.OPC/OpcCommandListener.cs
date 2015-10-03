@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenPixels.Server.Renderers;
+using System.Net.Sockets;
 
 namespace OpenPixels.Server.OPC
 {
@@ -41,16 +42,26 @@ namespace OpenPixels.Server.OPC
             var token = _cancel.Token;
             Task.Run(async () =>
             {
-                OpcMessage? message;
-                do
+                try
                 {
-                    message = await reader.ReadMessageAsync(token).ConfigureAwait(false);
-                    if (message != null)
-                        HandleMessageReceived(message.Value);
-                } while (message != null && !token.IsCancellationRequested);
+                    OpcMessage? message;
+                    do
+                    {
+                        message = await reader.ReadMessageAsync(token).ConfigureAwait(false);
+                        if (message != null)
+                            HandleMessageReceived(message.Value);
+                    } while (message != null && !token.IsCancellationRequested);
 
-                _log.InfoFormat("Client {0} disconnected", client.Client.RemoteEndPoint);
-                reader.Dispose();
+                    _log.InfoFormat("Client {0} disconnected", client.Client.RemoteEndPoint);
+                }
+                catch (SocketException err)
+                {
+                    _log.Error("Aborted reader due to error", err);
+                }
+                finally
+                {
+                    reader.Dispose();
+                }
 
             }, token);
 
@@ -89,7 +100,7 @@ namespace OpenPixels.Server.OPC
         private void HandleSetPixels(byte channel, byte[] messagePayload)
         {
             // With the OPC protocol, the payload is a series of R/G/B byte triplets
-            // so...
+            // so... map to Color type
             var pixelCount = messagePayload.Length / 3; // int rounding intentional
             var pixels = new Color[pixelCount];
             for (int i = 0; i < pixelCount; i++)
@@ -99,7 +110,13 @@ namespace OpenPixels.Server.OPC
                 var b = messagePayload[i*3+2];
                 pixels[i] = Color.FromArgb(r, g, b);
             }
-            OnCommandAvailable(channel, r => r.SetPixels(pixels));
+
+            // And dispatch a delegate that can apply the pixels to any selected renderer
+            OnCommandAvailable(channel, r =>
+            {
+                r.SetPixels(pixels);
+                r.Show();       // <- I keep forgetting this one crucial step
+            });
         }
 
         public event EventHandler<OpcMessage> MessageReceived;

@@ -94,7 +94,7 @@ namespace OpenPixels.ServerHost
                         Console.WriteLine("\t{0} ({1})", address.Address, iface.Name);
                 }
 
-                foreach (var renderer in server.Channels.SelectMany(c => c))
+                foreach (var renderer in server.AllRenderers)
                 {
                     Console.WriteLine("Running self-test on {0}", renderer);
                     renderer.SetPixelColor(0, 0xFF, 0x00, 0x00);
@@ -103,10 +103,17 @@ namespace OpenPixels.ServerHost
                     renderer.SetPixelColor(3, 0xFF, 0x00, 0x00);
                     renderer.SetPixelColor(4, 0x00, 0xFF, 0x00);
                     renderer.SetPixelColor(5, 0x00, 0x00, 0xFF);
+                    renderer.Show();
                 }
 
                 Console.WriteLine("Press ENTER to shutdown");
                 Console.ReadLine();
+
+                foreach (var renderer in server.AllRenderers)
+                {
+                    renderer.Clear();
+                    renderer.Show();
+                }
             }
             return 0;
         }

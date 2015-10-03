@@ -1,0 +1,1 @@
+﻿sudo ./OpenPixels.ServerHost.exe

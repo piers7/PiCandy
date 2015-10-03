@@ -48,6 +48,11 @@ namespace OpenPixels.Server
             get { return _channels; }
         }
 
+        public IEnumerable<IPixelRenderer> AllRenderers
+        {
+            get { return Channels.SelectMany(c => c); }
+        }
+
         private void DispatchCommand(object sender, ICommand command)
         {
             var renderers = _channels[command.Channel];
@@ -64,7 +69,11 @@ namespace OpenPixels.Server
                 listener.CommandAvailable -= DispatchCommand;
 
             foreach (var renderer in _channels.SelectMany(c => c))
-                renderer.Clear();
+            {
+                var disposable = renderer as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
         }
     }
 }

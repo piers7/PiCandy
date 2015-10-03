@@ -13,7 +13,7 @@ namespace OpenPixels.Server.Renderers
     /// A sample implementation of an <see cref="IPixelRenderer"/> that just dumps content
     /// to a text writer (typically Console.Out)
     /// </summary>
-    public class TextWriterRenderer : IPixelChannel, IPixelRenderer
+    public class TextWriterRenderer : IPixelRenderer, IPixelChannel
     {
         private TextWriter _writer;
         private int _byteLimit;
@@ -30,7 +30,9 @@ namespace OpenPixels.Server.Renderers
 
         public int PixelCount { get { return _buffer.Length; } }
 
-        public void Clear() { }
+        public void Clear() {
+            _buffer = new uint[_buffer.Length];
+        }
 
         public void SetPixels(uint[] data, int offset = 0)
         {
@@ -46,7 +48,8 @@ namespace OpenPixels.Server.Renderers
 
         public void SetPixelColor(int pixel, byte r, byte g, byte b)
         {
-            _buffer[pixel] = (uint)Color.FromArgb(r, g, b).ToArgb();
+            var packed = Color.FromArgb(r, g, b).ToArgb();
+            _buffer[pixel] = (uint)(packed & 0xFFFFFF); // mask and discard 1st byte (alpha)
         }
 
         public void SetPixelColor(int pixel, uint color)
@@ -61,11 +64,6 @@ namespace OpenPixels.Server.Renderers
                 data = data.Take(_byteLimit / 2).ToArray();
 
             _writer.WriteLine("[{0,2}] " + string.Join(" ", data.Select(d => d.ToString("x6"))), Channel);
-        }
-
-        IPixelRenderer IPixelChannel.Renderer
-        {
-            get { return this; }
         }
     }
 }

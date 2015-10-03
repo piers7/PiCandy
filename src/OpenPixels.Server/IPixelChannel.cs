@@ -9,6 +9,5 @@ namespace OpenPixels.Server
     public interface IPixelChannel
     {
         int Channel { get; }
-        IPixelRenderer Renderer { get; }
     }
 }

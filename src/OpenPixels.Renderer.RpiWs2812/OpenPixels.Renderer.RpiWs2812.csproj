@@ -42,7 +42,6 @@
     <Compile Include="Interop\NativeMethods.cs" />
     <Compile Include="PixelOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RpiWs2812Channel.cs" />
     <Compile Include="RpiWs2812RendererModule.cs" />
     <Compile Include="RpiWs281xSetupInfo.cs" />
     <Compile Include="Interop\Ws281x_channel_t.cs" />

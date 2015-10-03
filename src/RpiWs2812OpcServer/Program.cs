@@ -61,7 +61,7 @@ namespace RpiWs2812OpcServer
 
         private static void RunWorker(int port, CancellationToken token)
         {
-            using (_renderer = OpenPixels.Renderer.RpiWs2812.RpiWs281xClient.Create(60))
+            using (_renderer = new OpenPixels.Renderer.RpiWs2812.RpiWs281xClient(60))
             using (var listener = new SimpleSocketServer<OpcReader>(
                 IPAddress.Any,
                 port,

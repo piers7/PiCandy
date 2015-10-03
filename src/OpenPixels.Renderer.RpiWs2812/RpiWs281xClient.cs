@@ -25,20 +25,21 @@ namespace OpenPixels.Renderer.RpiWs2812
         private readonly ILog _log;
         private readonly PixelOrder _pixelOrder;
 
-        public static RpiWs281xClient Create(int ledCount, int gpioPin = RpiWs281xSetupInfo.DefaultGpio, ILog log = null)
+        public RpiWs281xClient(int ledCount, 
+            PixelOrder pixelOrder = PixelOrder.GRB, 
+            int gpioPin = RpiWs281xSetupInfo.DefaultGpio, 
+            ILog log = null
+        )
+            : this(new RpiWs281xSetupInfo(ledCount)
+            {
+                GpioPin = gpioPin,
+                PixelOrder = pixelOrder,
+            }, log)
         {
-            var setupInfo = new RpiWs281xSetupInfo(ledCount) { GpioPin = gpioPin };
-            return Create(setupInfo);
-        }
-
-        public static RpiWs281xClient Create(RpiWs281xSetupInfo setupInfo, ILog log = null)
-        {
-            var data = setupInfo.CreateDataStructure();
-            return new RpiWs281xClient(data, setupInfo.PixelOrder, log);
         }
 
         public RpiWs281xClient(RpiWs281xSetupInfo setupInfo, ILog log = null)
-            :this(setupInfo.CreateDataStructure(), setupInfo.PixelOrder)
+            :this(setupInfo.CreateDataStructure(), setupInfo.PixelOrder, log)
         {
         }
 
@@ -48,10 +49,6 @@ namespace OpenPixels.Renderer.RpiWs2812
             _defaultChannel = 0;
             _log = log ?? NullLogger.Instance;
             _pixelOrder = PixelOrder.GRB;
-
-            // Have to be careful not to have a race condition here
-            // Maybe create the wrapper which will do the cleandown on finallise
-            // *before* the call to init?
 
             var ret = NativeMethods.ws2811_init(ref _data);
             if (ret != 0)
@@ -82,8 +79,8 @@ namespace OpenPixels.Renderer.RpiWs2812
         public void Clear()
         {
             _log.Verbose("Clear");
-            var blank = new uint[PixelCount];
-            SetPixels(blank);
+            var channel = _data.channel[_defaultChannel];
+            SetPixelsInternal(channel, new uint[channel.count]);
         }
 
         /// <summary>

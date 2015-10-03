@@ -16,10 +16,10 @@ namespace OpenPixels.Renderer.RpiWs2812
         readonly int _channel;
         readonly RpiWs281xSetupInfo _settings;
 
-        public RpiWs2812RendererModule(int channel, int pixelCount)
+        public RpiWs2812RendererModule(int channel, int pixels)
         {
             _channel = channel;
-            _settings = new RpiWs281xSetupInfo(pixelCount);
+            _settings = new RpiWs281xSetupInfo(pixels);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace OpenPixels.Renderer.RpiWs2812
         /// <summary>
         /// Defines the number of pixels the renderer exposes
         /// </summary>
-        public int PixelCount { get { return _settings.LedCount; } }
+        public int Pixels { get { return _settings.LedCount; } }
 
         #region Expose other from RpiWs281xSetupInfo (easier to config this way
         public uint Frequency
@@ -72,13 +72,10 @@ namespace OpenPixels.Renderer.RpiWs2812
             builder
                 .RegisterType<RpiWs281xClient>()
                 .WithParameter(TypedParameter.From(_settings))
-                //.Register(c => new RpiWs2812Channel(Channel, _settings))
                 .As<IPixelRenderer>()
                 .WithMetadata<ChannelInfo>(m =>
                     m.For(am => am.Channel, Channel)
                 )
-                //.As<IPixelChannel>()
-                //.Keyed<IPixelChannel>(Channel)
                 ;
         }
     }

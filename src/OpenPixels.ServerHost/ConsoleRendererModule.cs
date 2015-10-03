@@ -11,12 +11,12 @@ namespace OpenPixels.Server
     class ConsoleRendererModule : Module
     {
         public int Channel { get; set; }
-        public int Width { get; set; }
+        public int Pixels { get; set; }
 
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .Register(c => new TextWriterRenderer(Console.Out, Width)
+                .Register(c => new TextWriterRenderer(Console.Out, Pixels)
                 {
                     Channel = Channel
                 })

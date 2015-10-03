@@ -10,7 +10,9 @@ namespace OpenPixels.Server
     {
         public ChannelInfo(IDictionary<string, object> metadata)
         {
-            Channel = (int)metadata["Channel"];
+            object channelRaw;
+            if(metadata.TryGetValue("Channel", out channelRaw))
+                Channel = (int)channelRaw;
         }
 
         public int Channel { get; set; }
