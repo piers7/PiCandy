@@ -118,7 +118,7 @@ namespace RpiWs2812OpcServer
             }
         }
 
-        private static OpcReader CreateClient(System.Net.Sockets.TcpClient client)
+        private static void CreateClient(System.Net.Sockets.TcpClient client)
         {
             var ep = client.Client.RemoteEndPoint;
             Log.InfoFormat("Client {0} connected", ep);
@@ -140,7 +140,6 @@ namespace RpiWs2812OpcServer
                     //HandleMessageReceived(session, message);
                 }
             });
-            return session;
         }
 
         private static void HandleMessageReceived(object sender, OpcMessage message)

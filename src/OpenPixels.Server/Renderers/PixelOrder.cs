@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenPixels.Renderer.RpiWs2812
+namespace OpenPixels.Server.Renderers
 {
     /// <summary>
     /// Indicates the expected byte order for the Ws2812's.

@@ -21,12 +21,12 @@ namespace OpenPixels.Server.OPC
         private readonly IPEndPoint _endpoint;
         private readonly CancellationTokenSource _cts;
         private readonly TcpListener _listener;
-        private readonly CreateWorker _createWorker;
+        private readonly Action<TcpClient> _createWorker;
         private readonly ILog _log;
 
         public SimpleSocketServer(
             IPAddress ipAddress, int port,
-            CreateWorker createWorker,
+            Action<TcpClient> createWorker,
             ILog log = null
         )
             : this(new IPEndPoint(ipAddress, port), createWorker, log)
@@ -34,7 +34,7 @@ namespace OpenPixels.Server.OPC
         }
 
         public SimpleSocketServer(IPEndPoint endpoint,
-            CreateWorker createWorker,
+            Action<TcpClient> createWorker,
             ILog log = null
             )
         {
@@ -53,14 +53,6 @@ namespace OpenPixels.Server.OPC
 
         public IPEndPoint EndPoint { get { return _endpoint; } }
 
-        public event EventHandler<TClient> ClientConnected;
-
-        protected void OnClientConnected(TClient client)
-        {
-            var handler = ClientConnected;
-            if (handler != null) handler(this, client);
-        }
-
         private async Task AcceptClients(CancellationToken token)
         {
             try
@@ -71,8 +63,7 @@ namespace OpenPixels.Server.OPC
                     if (client == null)
                         return;
 
-                    var worker = _createWorker(client);
-                    OnClientConnected(worker);
+                    _createWorker(client);
                 }
             }
             finally

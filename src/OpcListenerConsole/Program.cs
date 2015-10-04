@@ -32,12 +32,10 @@ namespace OpcListenerConsole
             }
         }
 
-        private static OpcReader CreateClient(System.Net.Sockets.TcpClient client)
+        private static void CreateClient(System.Net.Sockets.TcpClient client)
         {
             Console.WriteLine("Handling client connect from {0}", client.Client.RemoteEndPoint);
             var reader = new OpcReader(client);
-
-            return reader;
         }
 
         private static void HandleMessageReceived(OpcMessage message)

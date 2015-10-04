@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using OpenPixels.Renderer.RpiWs2812.Interop;
 using OpenPixels.Server;
+using System.Threading;
+using OpenPixels.Server.Renderers;
 
 namespace OpenPixels.Renderer.RpiWs2812
 {
@@ -24,6 +26,7 @@ namespace OpenPixels.Renderer.RpiWs2812
         private readonly byte _defaultChannel;
         private readonly ILog _log;
         private readonly PixelOrder _pixelOrder;
+        private int _init;
 
         public RpiWs281xClient(int ledCount, 
             PixelOrder pixelOrder = PixelOrder.GRB, 
@@ -50,9 +53,9 @@ namespace OpenPixels.Renderer.RpiWs2812
             _log = log ?? NullLogger.Instance;
             _pixelOrder = PixelOrder.GRB;
 
-            var ret = NativeMethods.ws2811_init(ref _data);
-            if (ret != 0)
-                throw new Exception(string.Format("ws2811_init failed - returned {0}", ret));
+            _init = NativeMethods.ws2811_init(ref _data);
+            if (_init != 0)
+                throw new Exception(string.Format("ws2811_init failed - returned {0}", _init));
         }
 
         public int GpioPin
@@ -296,7 +299,11 @@ namespace OpenPixels.Renderer.RpiWs2812
 
         private void Dispose(bool disposed)
         {
-            NativeMethods.ws2811_fini(ref _data);
+            // Only tear down if we sucesfully init'd in the first place
+            // (and even then, only do it once)
+            if(Interlocked.Exchange(ref _init, 0) > 0)
+                NativeMethods.ws2811_fini(ref _data);
+
             GC.SuppressFinalize(this);
         }
 

@@ -25,13 +25,13 @@ namespace OpenPixels.Server
             ILog log = null
             )
         {
+            _log = log ?? NullLogger.Instance;
             _sources = sources;
-            _channels = channels.ToLookup(
+            _channels = ValidOnly(channels).ToLookup(
                 c => c.Meta.Channel,
                 c => GetRenderer(c)
                 );
             _getMap = getMap;
-            _log = log;
 
             // Hook up to all listeners
             foreach (var listener in _sources)
@@ -40,6 +40,27 @@ namespace OpenPixels.Server
             // sanity check
             if (!_channels.Any())
                 throw new InvalidOperationException("No channels configured");
+        }
+
+        private IEnumerable<Lazy<TValue, ChannelMetadata>> ValidOnly<TValue>(IEnumerable<Lazy<TValue, ChannelMetadata>> seq)
+        {
+            return seq
+                .Where(item =>
+                {
+                    try
+                    {
+                        var ignored = item.Value;
+                        return true;
+                    }
+                    catch (Exception err)
+                    {
+                        var errorMessage = string.Format("A renderer on channel #{0} failed to initialize: {1}", item.Meta.Channel, err.Message);
+                        _log.Warn(errorMessage);
+                        return false;
+                    }
+                })
+                .ToArray()
+                ;
         }
 
         private Lazy<IPixelRenderer> GetRenderer(Lazy<IPixelRenderer, ChannelMetadata> c)

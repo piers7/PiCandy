@@ -35,23 +35,6 @@ namespace OpenPixels.Server.OPC
             _log = log ?? NullLogger.Instance;
         }
 
-        public static Task PumpAllMessages(OpcReader reader, CancellationToken token, Action<OpcMessage> handler)
-        {
-            return Task.Run(async () =>
-            {
-                OpcMessage? message;
-                do
-                {
-                    message = await reader.ReadMessageAsync(token).ConfigureAwait(false);
-                    if (message != null)
-                        handler(message.Value);
-                } while (message != null && !token.IsCancellationRequested);
-
-                reader.Dispose();
-
-            }, token);
-        }
-
         public Task<OpcMessage?> ReadMessageAsync()
         {
             var ignored = new CancellationTokenSource();

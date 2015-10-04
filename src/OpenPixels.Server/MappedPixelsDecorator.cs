@@ -62,7 +62,10 @@ namespace OpenPixels.Server
             for (int pixelIndex = offset; pixelIndex < pixels.Length; pixelIndex++)
             {
                 var mappedIndex = _map(pixelIndex);
-                mapped[mappedIndex] = pixels[pixelIndex];
+                // got to be sure we don't run over the end
+                // if the number of pixels isn't an even multiple of the zig-zag size
+                if(mappedIndex < mapped.Length)
+                    mapped[mappedIndex] = pixels[pixelIndex];
             }
             return mapped;
         }
@@ -75,7 +78,10 @@ namespace OpenPixels.Server
             for (int pixelIndex = 0; pixelIndex < pixels.Length; pixelIndex++)
             {
                 var mappedIndex = _map(pixelIndex);
-                pixels[pixelIndex] = mapped[mappedIndex];
+                // got to be sure we don't run over the end
+                // if the number of pixels isn't an even multiple of the zig-zag size
+                if (mappedIndex < mapped.Length)
+                    pixels[pixelIndex] = mapped[mappedIndex];
             }
             return pixels;
         }

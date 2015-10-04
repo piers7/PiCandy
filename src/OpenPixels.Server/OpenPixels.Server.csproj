@@ -51,6 +51,7 @@
     <Compile Include="NullLogger.cs" />
     <Compile Include="OpenPixelsServer.cs" />
     <Compile Include="MappedPixelsDecorator.cs" />
+    <Compile Include="Renderers\PixelOrder.cs" />
     <Compile Include="Renderers\RendererEx.cs" />
     <Compile Include="SimpleSocketServer.cs" />
     <Compile Include="Renderers\TextWriterRenderer.cs" />

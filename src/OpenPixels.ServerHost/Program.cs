@@ -47,21 +47,7 @@ namespace OpenPixels.ServerHost
             var builder = new ContainerBuilder();
 
             // Add core services
-            builder
-                .RegisterType<OpenPixelsServer>()
-                .SingleInstance()
-                ;
-
-            builder.Register<Func<string,IPositionalMap>>(c => {
-                var scope = c.Resolve<ILifetimeScope>();
-                return scope.ResolveNamed<IPositionalMap>;
-            });
-
-            // map autofac's type to our internal meta type (attempting to cut off autofac reference leakage)
-            builder
-                .RegisterAdapter<Meta<Lazy<IPixelRenderer>>, Lazy<IPixelRenderer, ChannelMetadata>>(
-                    meta => new Lazy<IPixelRenderer, ChannelMetadata>(meta.Value, new ChannelMetadata(meta.Metadata))
-                );
+            builder.RegisterModule<CoreComponentsModule>();
 
             builder.RegisterModule(new LogInjectionModule<T>(logFactory) { InjectProperties = true });
 

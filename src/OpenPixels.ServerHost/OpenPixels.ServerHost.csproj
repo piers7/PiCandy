@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleRendererModule.cs" />
+    <Compile Include="CoreComponentsModule.cs" />
     <Compile Include="Logging\Log4NetWrapper.cs" />
     <Compile Include="Logging\LogInjectionModule.cs" />
     <Compile Include="Program.cs" />

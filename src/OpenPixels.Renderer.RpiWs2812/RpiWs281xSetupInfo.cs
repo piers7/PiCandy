@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using OpenPixels.Renderer.RpiWs2812.Interop;
+using OpenPixels.Server.Renderers;
 
 namespace OpenPixels.Renderer.RpiWs2812
 {
@@ -40,7 +41,7 @@ namespace OpenPixels.Renderer.RpiWs2812
             {
                 freq = Frequency,
                 dmanum = Dma,
-                channel = new Ws281x_channel_t[2] {
+                channel = new [] {
                         new Ws281x_channel_t {
                             gpionum = GpioPin,
                             count = LedCount,

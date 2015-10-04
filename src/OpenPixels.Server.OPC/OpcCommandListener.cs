@@ -31,7 +31,7 @@ namespace OpenPixels.Server.OPC
             );
         }
 
-        private OpcReader CreateSession(System.Net.Sockets.TcpClient client)
+        private void CreateSession(System.Net.Sockets.TcpClient client)
         {
             // Cancel any existing sessions
             _cancel.Cancel();
@@ -51,21 +51,39 @@ namespace OpenPixels.Server.OPC
                         if (message != null)
                             HandleMessageReceived(message.Value);
                     } while (message != null && !token.IsCancellationRequested);
-
-                    _log.InfoFormat("Client {0} disconnected", client.Client.RemoteEndPoint);
                 }
-                catch (SocketException err)
+                catch (Exception err)
                 {
-                    _log.Error("Aborted reader due to error", err);
+                    if(!IsHandled(err))
+                        throw;
                 }
                 finally
                 {
+                    _log.InfoFormat("Client {0} disconnected", client.Client.RemoteEndPoint);
                     reader.Dispose();
                 }
 
             }, token);
+        }
 
-            return reader;
+        private bool IsHandled(Exception err)
+        {
+            var socketErr = err.GetBaseException() as SocketException;
+            if(socketErr!=null)
+            {
+                switch(socketErr.SocketErrorCode){
+                    case SocketError.ConnectionReset:
+                        //_log.Info("Connection reset");
+                        return true;
+                    default:
+                        _log.WarnFormat("Aborted reader due to {0}: {1}", err.GetType().Name, err.Message);
+                        return true;
+                }
+            }
+
+            var errorMessage = string.Format("Aborted reader due to {0}: {1}", err.GetType().Name, err.Message);
+            _log.Error(errorMessage, err);
+            return true;
         }
 
         private void HandleMessageReceived(OpcMessage e)
