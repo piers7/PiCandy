@@ -47,17 +47,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenPixels.Renderer.RpiWs2812\OpenPixels.Renderer.RpiWs2812.csproj">
+    <ProjectReference Include="..\PiCandy.Renderer.RpiWs2812\PiCandy.Renderer.RpiWs2812.csproj">
       <Project>{6c377f1d-cee3-4f73-ae77-39cbd0b4c327}</Project>
-      <Name>OpenPixels.Renderer.RpiWs2812</Name>
+      <Name>PiCandy.Renderer.RpiWs2812</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenPixels.Server.OPC\OpenPixels.Server.OPC.csproj">
+    <ProjectReference Include="..\PiCandy.Server.OPC\PiCandy.Server.OPC.csproj">
       <Project>{5d16a046-c545-447f-b944-89c91943f4c6}</Project>
-      <Name>OpenPixels.Server.OPC</Name>
+      <Name>PiCandy.Server.OPC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenPixels.Server\OpenPixels.Server.csproj">
+    <ProjectReference Include="..\PiCandy.Server\PiCandy.Server.csproj">
       <Project>{7a52f1dd-3341-4f1a-a0be-7932ec5ac63f}</Project>
-      <Name>OpenPixels.Server</Name>
+      <Name>PiCandy.Server</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

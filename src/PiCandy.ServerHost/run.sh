@@ -1,0 +1,1 @@
+sudo ./PiCandy.ServerHost.exe "$@"

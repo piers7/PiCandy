@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82E94BE8-BF52-4E39-A0E6-5A8A255E37C4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{6C377F1D-CEE3-4F73-AE77-39CBD0B4C327}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpcListenerConsole</RootNamespace>
-    <AssemblyName>OpcListenerConsole</AssemblyName>
+    <RootNamespace>PiCandy.Renderer.RpiWs2812</RootNamespace>
+    <AssemblyName>PiCandy.Renderer.RpiWs2812</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,9 +20,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,28 +31,36 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Interop\NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpiWs2812RendererModule.cs" />
+    <Compile Include="RpiWs281xSetupInfo.cs" />
+    <Compile Include="Interop\Ws281x_channel_t.cs" />
+    <Compile Include="Interop\Ws281x_t.cs" />
+    <Compile Include="RpiWs281xClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PiCandy.Server.OPC\PiCandy.Server.OPC.csproj">
-      <Project>{5d16a046-c545-447f-b944-89c91943f4c6}</Project>
-      <Name>PiCandy.Server.OPC</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PiCandy.Server\PiCandy.Server.csproj">
       <Project>{7a52f1dd-3341-4f1a-a0be-7932ec5ac63f}</Project>
       <Name>PiCandy.Server</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "$(SolutionDir)bin"
+copy "$(TargetPath)" "$(SolutionDir)bin\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

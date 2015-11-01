@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82E94BE8-BF52-4E39-A0E6-5A8A255E37C4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{7A52F1DD-3341-4F1A-A0BE-7932EC5AC63F}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpcListenerConsole</RootNamespace>
-    <AssemblyName>OpcListenerConsole</AssemblyName>
+    <RootNamespace>PiCandy.Server</RootNamespace>
+    <AssemblyName>PiCandy.Server</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,24 +32,32 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ChannelMetadata.cs" />
+    <Compile Include="DelegateCommand.cs" />
+    <Compile Include="Filters\IPositionalMap.cs" />
+    <Compile Include="Filters\ZigZagPositionalMap.cs" />
+    <Compile Include="ICommand.cs" />
+    <Compile Include="ILog.cs" />
+    <Compile Include="IPixelChannel.cs" />
+    <Compile Include="Lazy.cs" />
+    <Compile Include="NullLogger.cs" />
+    <Compile Include="OpenPixelsServer.cs" />
+    <Compile Include="MappedPixelsDecorator.cs" />
+    <Compile Include="Renderers\PixelOrder.cs" />
+    <Compile Include="Renderers\RendererEx.cs" />
+    <Compile Include="SimpleSocketServer.cs" />
+    <Compile Include="Renderers\TextWriterRenderer.cs" />
+    <Compile Include="ICommandSource.cs" />
+    <Compile Include="Renderers\IPixelRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PiCandy.Server.OPC\PiCandy.Server.OPC.csproj">
-      <Project>{5d16a046-c545-447f-b944-89c91943f4c6}</Project>
-      <Name>PiCandy.Server.OPC</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PiCandy.Server\PiCandy.Server.csproj">
-      <Project>{7a52f1dd-3341-4f1a-a0be-7932ec5ac63f}</Project>
-      <Name>PiCandy.Server</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

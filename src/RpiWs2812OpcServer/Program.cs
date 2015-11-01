@@ -1,5 +1,5 @@
-﻿using OpenPixels.Server;
-using OpenPixels.Server.OPC;
+﻿using PiCandy.Server;
+using PiCandy.Server.OPC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenPixels.Server.Renderers;
+using PiCandy.Server.Renderers;
 using System.Collections.Concurrent;
 
 namespace RpiWs2812OpcServer
@@ -16,7 +16,7 @@ namespace RpiWs2812OpcServer
     class Program
     {
         const int defaultPort = 7890; // same as OpenPixelControl reference impl. uses
-        static OpenPixels.Renderer.RpiWs2812.RpiWs281xClient _renderer;
+        static PiCandy.Renderer.RpiWs2812.RpiWs281xClient _renderer;
         static readonly ILog Log = new ConsoleLogger(); // { IsVerboseEnabled = true };
         static ConcurrentQueue<OpcMessage> Queue = new ConcurrentQueue<OpcMessage>();
 
@@ -61,7 +61,7 @@ namespace RpiWs2812OpcServer
 
         private static void RunWorker(int port, CancellationToken token)
         {
-            using (_renderer = new OpenPixels.Renderer.RpiWs2812.RpiWs281xClient(60))
+            using (_renderer = new PiCandy.Renderer.RpiWs2812.RpiWs281xClient(60))
             using (var listener = new SimpleSocketServer<OpcReader>(
                 IPAddress.Any,
                 port,
