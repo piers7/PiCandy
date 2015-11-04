@@ -71,7 +71,7 @@ namespace PiCandy.ServerHost
 
                 Console.WriteLine("Using the following channels:");
                 foreach (var item in server.Channels.OrderBy(c => c.Key))
-                    Console.WriteLine("\t{0,2}: {1}", item.Key, string.Join(", ", item.Select(c => c.GetType().Name)));
+                    Console.WriteLine("\t{0,2}: {1}", item.Key, string.Join(", ", item.Select(c => GetName(c))));
 
                 // I don't know about you, but between the VMs and the VPNs
                 // I seem to have a *heap* many IP addresses
@@ -108,6 +108,13 @@ namespace PiCandy.ServerHost
                 }
             }
             return 0;
+        }
+
+        private static string GetName(Lazy<IPixelRenderer> renderer)
+        {
+            return renderer.Value.ToString();
+            //var actualType = renderer.GetType().GetGenericArguments()[0];
+            //return actualType.Name;
         }
     }
 }

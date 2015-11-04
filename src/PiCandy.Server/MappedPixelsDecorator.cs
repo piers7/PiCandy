@@ -85,5 +85,10 @@ namespace PiCandy.Server
             }
             return pixels;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}({1})", GetType().Name, _renderer.GetType().Name);
+        }
     }
 }

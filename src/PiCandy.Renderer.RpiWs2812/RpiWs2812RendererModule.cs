@@ -32,6 +32,8 @@ namespace PiCandy.Renderer.RpiWs2812
         /// </summary>
         public int Pixels { get { return _settings.LedCount; } }
 
+        public string Map { get; set; }
+
         #region Expose other from RpiWs281xSetupInfo (easier to config this way
         public uint Frequency
         {
@@ -74,7 +76,10 @@ namespace PiCandy.Renderer.RpiWs2812
                 .WithParameter(TypedParameter.From(_settings))
                 .As<IPixelRenderer>()
                 .WithMetadata<ChannelMetadata>(m =>
-                    m.For(am => am.Channel, Channel)
+                {
+                    m.For(am => am.Channel, Channel);
+                    m.For(am => am.Map, Map);
+                }
                 )
                 ;
         }
