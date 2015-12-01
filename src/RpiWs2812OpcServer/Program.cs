@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using PiCandy.Server.Renderers;
 using System.Collections.Concurrent;
+using PiCandy.Logging;
+using PiCandy.Rendering;
 
 namespace RpiWs2812OpcServer
 {

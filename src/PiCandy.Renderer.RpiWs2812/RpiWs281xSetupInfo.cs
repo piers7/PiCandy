@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using PiCandy.Renderer.RpiWs2812.Interop;
-using PiCandy.Server.Renderers;
+using PiCandy.Rendering;
 
 namespace PiCandy.Renderer.RpiWs2812
 {

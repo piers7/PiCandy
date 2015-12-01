@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PiCandy.Server
+namespace PiCandy.Rendering
 {
     /// <summary>
     /// Allows control of actual pixel-rendering hardware

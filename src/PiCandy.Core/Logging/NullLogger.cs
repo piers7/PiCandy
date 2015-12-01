@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PiCandy.Server
+namespace PiCandy.Logging
 {
     public sealed class NullLogger : ILog
     {

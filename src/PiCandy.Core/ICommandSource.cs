@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PiCandy.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PiCandy.Server
+namespace PiCandy
 {
     /// <summary>
     /// Receives pixel-rendering commands from the outside world

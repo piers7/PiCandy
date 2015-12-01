@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using PiCandy.Rendering;
 using PiCandy.Server.Renderers;
 using System;
 using System.Collections.Generic;

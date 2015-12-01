@@ -44,6 +44,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PiCandy.Core\PiCandy.Core.csproj">
+      <Project>{340770c1-827d-46bf-908e-0b35c8d3e525}</Project>
+      <Name>PiCandy.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PiCandy.Server.OPC\PiCandy.Server.OPC.csproj">
       <Project>{5d16a046-c545-447f-b944-89c91943f4c6}</Project>
       <Name>PiCandy.Server.OPC</Name>

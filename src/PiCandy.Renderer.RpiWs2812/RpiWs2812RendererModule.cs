@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using PiCandy.Server;
+using PiCandy.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;

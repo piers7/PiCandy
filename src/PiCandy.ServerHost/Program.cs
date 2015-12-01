@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Autofac.Configuration;
 using Autofac.Features.Metadata;
+using PiCandy.Logging;
+using PiCandy.Rendering;
 using PiCandy.Server;
 using PiCandy.Server.Filters;
 using PiCandy.Server.Logging;
@@ -61,9 +63,9 @@ namespace PiCandy.ServerHost
 
         private static int Run(IContainer container)
         {
-            var serverType = typeof(OpenPixelsServer);
+            var serverType = typeof(PiCandyServer);
             Console.WriteLine("{0} v{1}", serverType.Name, serverType.Assembly.GetName().Version);
-            using (var server = container.Resolve<OpenPixelsServer>())
+            using (var server = container.Resolve<PiCandyServer>())
             {
                 Console.WriteLine("Using the following command sources:");
                 foreach (var item in server.Sources)
@@ -112,6 +114,8 @@ namespace PiCandy.ServerHost
 
         private static string GetName(Lazy<IPixelRenderer> renderer)
         {
+            // TODO: Remove this lazy-renderer stuff. It's garbage
+
             return renderer.Value.ToString();
             //var actualType = renderer.GetType().GetGenericArguments()[0];
             //return actualType.Name;

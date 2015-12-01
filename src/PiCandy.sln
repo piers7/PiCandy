@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F60371
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiCandy.Core", "PiCandy.Core\PiCandy.Core.csproj", "{340770C1-827D-46BF-908E-0B35C8D3E525}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2D18E0C-F4FE-4CF7-9457-D6664CA2BE92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{340770C1-827D-46BF-908E-0B35C8D3E525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{340770C1-827D-46BF-908E-0B35C8D3E525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{340770C1-827D-46BF-908E-0B35C8D3E525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{340770C1-827D-46BF-908E-0B35C8D3E525}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

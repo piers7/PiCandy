@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PiCandy.Server.Renderers
+namespace PiCandy.Rendering
 {
     /// <summary>
     /// Indicates the expected byte order for the Ws2812's.

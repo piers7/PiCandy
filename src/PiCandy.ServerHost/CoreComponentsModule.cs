@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Features.Metadata;
+using PiCandy.Rendering;
 using PiCandy.Server.Filters;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace PiCandy.Server
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .RegisterType<OpenPixelsServer>()
+                .RegisterType<PiCandyServer>()
                 .SingleInstance()
                 ;
 

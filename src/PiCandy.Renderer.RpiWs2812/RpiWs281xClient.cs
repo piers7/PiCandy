@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using PiCandy.Logging;
 using PiCandy.Renderer.RpiWs2812.Interop;
-using PiCandy.Server;
+using PiCandy.Rendering;
+using System;
+using System.Runtime.InteropServices;
 using System.Threading;
-using PiCandy.Server.Renderers;
 
 namespace PiCandy.Renderer.RpiWs2812
 {

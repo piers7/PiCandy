@@ -1,4 +1,5 @@
-﻿using PiCandy.Server;
+﻿using PiCandy.Logging;
+using PiCandy.Server;
 using System;
 using System.Collections.Generic;
 using System.IO;

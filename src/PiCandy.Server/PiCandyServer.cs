@@ -1,9 +1,12 @@
-﻿using PiCandy.Server.Filters;
+﻿using PiCandy.Rendering;
+using PiCandy.Server.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PiCandy;
+using PiCandy.Logging;
 
 namespace PiCandy.Server
 {
@@ -11,14 +14,14 @@ namespace PiCandy.Server
     /// Routes <see cref="ICommands"/> to the relevant <see cref="IPixelRenderer"/>
     /// based on source/destination channel matching.
     /// </summary>
-    public class OpenPixelsServer : IDisposable
+    public class PiCandyServer : IDisposable
     {
         readonly IEnumerable<ICommandSource> _sources;
         readonly ILookup<int, Lazy<IPixelRenderer>> _channels;
         readonly Func<string, IPositionalMap> _getMap;
         readonly ILog _log;
 
-        public OpenPixelsServer(
+        public PiCandyServer(
             IEnumerable<ICommandSource> sources,
             IEnumerable<Lazy<IPixelRenderer, ChannelMetadata>> channels,
             Func<string, IPositionalMap> getMap,

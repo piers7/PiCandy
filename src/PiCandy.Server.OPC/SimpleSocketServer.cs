@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PiCandy.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,8 +76,8 @@ namespace PiCandy.Server.OPC
         public void Dispose()
         {
             _log.Debug("Shutting down listener");
-            _cts.Cancel();
             _listener.Stop();
+            _cts.Cancel();
         }
     }
 }

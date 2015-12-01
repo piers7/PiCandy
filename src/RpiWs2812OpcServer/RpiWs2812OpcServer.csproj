@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PiCandy.Core\PiCandy.Core.csproj">
+      <Project>{340770c1-827d-46bf-908e-0b35c8d3e525}</Project>
+      <Name>PiCandy.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PiCandy.Renderer.RpiWs2812\PiCandy.Renderer.RpiWs2812.csproj">
       <Project>{6c377f1d-cee3-4f73-ae77-39cbd0b4c327}</Project>
       <Name>PiCandy.Renderer.RpiWs2812</Name>

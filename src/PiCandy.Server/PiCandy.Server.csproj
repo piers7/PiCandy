@@ -40,24 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelMetadata.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Filters\IPositionalMap.cs" />
     <Compile Include="Filters\ZigZagPositionalMap.cs" />
-    <Compile Include="ICommand.cs" />
-    <Compile Include="ILog.cs" />
     <Compile Include="IPixelChannel.cs" />
-    <Compile Include="Lazy.cs" />
-    <Compile Include="NullLogger.cs" />
-    <Compile Include="OpenPixelsServer.cs" />
+    <Compile Include="PiCandyServer.cs" />
     <Compile Include="MappedPixelsDecorator.cs" />
-    <Compile Include="Renderers\PixelOrder.cs" />
-    <Compile Include="Renderers\RendererEx.cs" />
-    <Compile Include="SimpleSocketServer.cs" />
     <Compile Include="Renderers\TextWriterRenderer.cs" />
-    <Compile Include="ICommandSource.cs" />
-    <Compile Include="Renderers\IPixelRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PiCandy.Core\PiCandy.Core.csproj">
+      <Project>{340770c1-827d-46bf-908e-0b35c8d3e525}</Project>
+      <Name>PiCandy.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

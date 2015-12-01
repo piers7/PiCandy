@@ -6,7 +6,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using PiCandy.Server.Renderers;
+using PiCandy.Logging;
+using PiCandy.Rendering;
 using System.Net.Sockets;
 
 namespace PiCandy.Server.OPC
@@ -149,7 +150,7 @@ namespace PiCandy.Server.OPC
 
         private void OnCommandAvailable(int channel, Action<IPixelRenderer> action)
         {
-            var command = new DelegateCommand(channel, action);
+            var command = new OpcCommand(channel, action);
             OnCommandAvailable(command);
         }
 
@@ -171,6 +172,28 @@ namespace PiCandy.Server.OPC
         {
             _cancel.Cancel();
             _listener.Dispose();
+        }
+
+        class OpcCommand : ICommand
+        {
+            int _channel;
+            Action<IPixelRenderer> _action;
+
+            public OpcCommand(int channel, Action<IPixelRenderer> action)
+            {
+                _channel = channel;
+                _action = action;
+            }
+
+            public int Channel
+            {
+                get { return _channel; }
+            }
+
+            public Action<IPixelRenderer> Execute
+            {
+                get { return _action; }
+            }
         }
     }
 }
