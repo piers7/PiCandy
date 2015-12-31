@@ -58,7 +58,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(SolutionDir)bin"
+    <PostBuildEvent Condition="'$(OS)' != 'Unix'">mkdir "$(SolutionDir)bin"
 copy "$(TargetPath)" "$(SolutionDir)bin\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
