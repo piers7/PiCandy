@@ -54,6 +54,9 @@ _ReSharper*/
 packages/
 *.nupkg
 
+# FAKE
+.fake/
+
 #ncrunch
 *ncrunch*
 *crunch*.local.xml
