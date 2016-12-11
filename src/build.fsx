@@ -19,7 +19,8 @@ let stringAsOption = function
     | x -> Some(x)
 let getBuildParamOrNone = getBuildParam >> stringAsOption
 let defaultOption value defaultValue = value |> function | None -> defaultValue | _ -> value 
-let deployTarget = getBuildParamOrDefault "deployTarget" "\\pierspi2\dev"
+//let deployTarget = getBuildParamOrDefault "deployTarget" "\\pierspi2\dev"
+let deployTarget = getBuildParamOrDefault "deployTarget" @"\\pizero1\pi\dev"
 /// option coallese operator
 let (|?) = defaultArg
 /// dictionary build helper 
@@ -106,9 +107,14 @@ Target "Test" (fun _ ->
 )
 
 Target "Deploy" (fun _ ->
-    do
-        !! "PiCandy.ServerHost\bin\debug\**"
-        |> FileHelper.CopyFiles (deployTarget @@ "\PiCandy.ServerHost-bin")
+    [
+        (!! @"PiCandy.ServerHost\bin\debug\**", deployTarget @@ "\PiCandy.ServerHost-bin");
+        (!! @"RpiWs2812OpcServer\bin\debug\**", deployTarget @@ "\RpiWs2812OpcServer-bin");
+    ]
+    |> Seq.iter (fun (source,target) -> 
+        printfn "Deploying to %s" target
+        source |> FileHelper.CopyFiles target
+    )
 )
 
 Target "Default" DoNothing
@@ -125,6 +131,10 @@ Target "NoOp" DoNothing
     ==> "Build" 
     ==> "Test"
     ==> "All"
+
+"Clean" 
+    ==> "Build" 
+    ==> "Deploy"
 
 // start build
 RunTargetOrDefault "Default"

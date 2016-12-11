@@ -18,41 +18,52 @@ namespace RpiWs2812OpcServer
     class Program
     {
         const int defaultPort = 7890; // same as OpenPixelControl reference impl. uses
+        const int defaultPixels = 60;
         static PiCandy.Renderer.RpiWs2812.RpiWs281xClient _renderer;
         static readonly ILog Log = new ConsoleLogger(); // { IsVerboseEnabled = true };
         static ConcurrentQueue<OpcMessage> Queue = new ConcurrentQueue<OpcMessage>();
+
+        // Note that Mono processes that use Console will apparently suspend
+        // when sent to background, unless output redirected (eg to /dev/null)
 
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            Console.WriteLine("Starting up...");
+            Log.Info("Starting up...");
+            var parsedArgs = args
+                .Select(a => a.Split('='))
+                .Where(parts => parts.Length >= 2)
+                .ToDictionary(parts => parts[0], parts => parts[1])
+                ;
             int port;
-            if (!(args.Length > 0 && int.TryParse(args[0], out port)))
+            if(!parsedArgs.ContainsKey("/port") || int.TryParse(parsedArgs["/port"], out port))
                 port = defaultPort;
+            int pixels;
+            if (!parsedArgs.ContainsKey("/pixels") || int.TryParse(parsedArgs["/pixels"], out pixels))
+                pixels = defaultPixels;
 
-            WriteEndpointsBanner(port);
+            WriteEndpointsBanner(port, Log.InfoFormat);
 
             var cancel = new CancellationTokenSource();
-            // This structure an attempt to co-erce messages onto origin thread for Ws2812 queue
-            var worker = Task.Run(() => RunWorker(port, cancel.Token), cancel.Token);
-            try
+            var worker = Task.Run(() => RunWorker(port, pixels, cancel.Token), cancel.Token);
+            var cancelRequested = new ManualResetEvent(false);
+
+            // Handles CTRL-C on Windows and Linux
+            Console.CancelKeyPress += (sender, eArgs) =>
             {
-                Console.WriteLine("Press RETURN to close server");
-                Console.ReadLine();
-                Console.WriteLine("Closing server");
-            }
-            catch (Exception err)
-            {
-                Console.WriteLine("Aborting server");
-                Console.WriteLine(err);
-            }
-            finally
-            {
-                Console.WriteLine("Cancelling worker and waiting for 2 secs");
-                cancel.Cancel();
-                worker.Wait(TimeSpan.FromSeconds(2));
-            }
+                Log.Warn("Terminating as cancel requested");
+                cancelRequested.Set();
+            };
+
+            // Wait for process shutdown request
+            Log.Info("Server running");
+            cancelRequested.WaitOne();
+
+            Log.Debug("Shutting down worker...");
+            cancel.Cancel();
+            worker.Wait(TimeSpan.FromSeconds(2));
+            Log.Info("Server stopped");
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -61,9 +72,9 @@ namespace RpiWs2812OpcServer
                 Log.Error("Unhandled exception, aborting", e.ExceptionObject as Exception);
         }
 
-        private static void RunWorker(int port, CancellationToken token)
+        private static void RunWorker(int port, int pixels, CancellationToken token)
         {
-            using (_renderer = new PiCandy.Renderer.RpiWs2812.RpiWs281xClient(60))
+            using (_renderer = new PiCandy.Renderer.RpiWs2812.RpiWs281xClient(pixels))
             using (var listener = new SimpleSocketServer<OpcReader>(
                 IPAddress.Any,
                 port,
@@ -162,9 +173,9 @@ namespace RpiWs2812OpcServer
             }
         }
 
-        private static void WriteEndpointsBanner(int port)
+        private static void WriteEndpointsBanner(int port, Action<string,object[]> log)
         {
-            Console.WriteLine("Listening for clients on the following endpoints:");
+            log("Listening for clients on the following endpoints:", new object[0]);
             foreach (var iface in NetworkInterface.GetAllNetworkInterfaces()
                     .Where(i => i.OperationalStatus == OperationalStatus.Up)
                     .OrderBy(i => i.Speed)
@@ -177,7 +188,7 @@ namespace RpiWs2812OpcServer
                         && a.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 )
                 {
-                    Console.WriteLine("\t{0}:{1} ({2})", address.Address, port, iface.Name);
+                    log("\t{0}:{1} ({2})", new object[] { address.Address, port, iface.Name });
                 }
             }
         }

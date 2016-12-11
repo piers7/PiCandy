@@ -29,7 +29,7 @@ namespace PiCandy.ServerHost
             {
                 _log = GetLogger(typeof(Program));
                 using(var container = CreateContainer(GetLogger))
-                    return Run(container);
+                    return Run(container, args);
             }
             finally
             {
@@ -61,7 +61,7 @@ namespace PiCandy.ServerHost
             return container;
         }
 
-        private static int Run(IContainer container)
+        private static int Run(IContainer container, string[] args)
         {
             var serverType = typeof(PiCandyServer);
             Console.WriteLine("{0} v{1}", serverType.Name, serverType.Assembly.GetName().Version);
@@ -100,16 +100,31 @@ namespace PiCandy.ServerHost
                     renderer.Show();
                 }
 
-                Console.WriteLine("Press ENTER to shutdown");
-                Console.ReadLine();
+                Console.WriteLine("Press CTRL-C to shutdown");
+                var shutdownWait = new System.Threading.ManualResetEvent(false);
+                Console.CancelKeyPress += (s, e) => shutdownWait.Set();
 
-                foreach (var renderer in server.AllRenderers)
-                {
-                    renderer.Clear();
-                    renderer.Show();
-                }
+                // Wait till we get cancel signal
+                shutdownWait.WaitOne();
+
+                Console.WriteLine("Shutting down...");
+                Shutdown(server.AllRenderers);  // TODO: refactor - just tell the server to shutdown & get it to include listeners etc...
             }
             return 0;
+        }
+
+        private static void Shutdown(IEnumerable<IPixelRenderer> allRenderers)
+        {
+            foreach (var renderer in allRenderers)
+            {
+                renderer.Clear();
+                renderer.Show();
+            }
+        }
+
+        private static void Program_Exited(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private static string GetName(Lazy<IPixelRenderer> renderer)
