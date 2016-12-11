@@ -11,15 +11,15 @@ static OpcWriter writer;
 void Main()
 {
 	var random = new Random();
-	using(writer = OpcWriter.Create("10.0.0.2", 7890)){
+	using(writer = OpcWriter.Create("pizero1", 7890)){
 		uint[] pixels = new uint[60];
 		int position = 0;
 		while(true){
-			pixels[position] = Wheel((byte)random.Next(255));
+			pixels[position++] = Wheel((byte)random.Next(255));
 			writer.WriteSetPixels(0, pixels);
-			if(position > 60)
+			if(position >= 60)
 				position = 0;
-			Thread.Sleep(10);
+			Thread.Sleep(50);
 		}
 	}
 }
