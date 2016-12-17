@@ -1,5 +1,5 @@
 <Query Kind="Program">
-  <Reference Relative="bin\PiCandy.Server.OPC.dll">C:\dev\PiCandy\src\bin\PiCandy.Server.OPC.dll</Reference>
+  <Reference Relative="..\bin\PiCandy.Server.OPC.dll">C:\dev\PiCandy\src\bin\PiCandy.Server.OPC.dll</Reference>
   <NuGetReference>Rx-Main</NuGetReference>
   <Namespace>System.Reactive</Namespace>
   <Namespace>System.Reactive.Linq</Namespace>
@@ -11,7 +11,7 @@ static OpcWriter writer;
 void Main()
 {
 	var random = new Random();
-	using(writer = OpcWriter.Create("pizero1", 7890)){
+	using(writer = OpcWriter.Create("localhost", 7890)){
 		uint[] pixels = new uint[60];
 		int position = 0;
 		while(true){
