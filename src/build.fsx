@@ -20,7 +20,7 @@ let stringAsOption = function
 let getBuildParamOrNone = getBuildParam >> stringAsOption
 let defaultOption value defaultValue = value |> function | None -> defaultValue | _ -> value 
 //let deployTarget = getBuildParamOrDefault "deployTarget" "\\pierspi2\dev"
-let deployTarget = getBuildParamOrDefault "deployTarget" @"\\pizero1\pi\dev"
+let deployTarget = getBuildParamOrNone "deployTarget"
 /// option coallese operator
 let (|?) = defaultArg
 /// dictionary build helper 
@@ -107,13 +107,22 @@ Target "Test" (fun _ ->
 )
 
 Target "Deploy" (fun _ ->
+    let deployTarget = deployTarget |> function
+        | Some x -> x
+        | None -> failwith @"Missing parameter deployTarget, like 'deployTarget=\\pizero1\pi\dev'"
     [
-        (!! @"PiCandy.ServerHost\bin\debug\**", deployTarget @@ "\PiCandy.ServerHost-bin");
-        (!! @"RpiWs2812OpcServer\bin\debug\**", deployTarget @@ "\RpiWs2812OpcServer-bin");
+        @"PiCandy.ServerHost"
+        @"RpiWs2812OpcServer"
     ]
-    |> Seq.iter (fun (source,target) -> 
-        printfn "Deploying to %s" target
-        source |> FileHelper.CopyFiles target
+    |> Seq.iter (fun project ->
+        let destination = deployTarget @@ (sprintf "%s-bin" project)
+        printfn "Deploying to %s" destination
+        !! (sprintf @"PiCandy.ServerHost/bin/%s/**/*.dll" buildConfig)
+        ++ (sprintf @"PiCandy.ServerHost/bin/%s/**/*.exe" buildConfig)
+        ++ (sprintf @"PiCandy.ServerHost/bin/%s/**/*.config" buildConfig)
+        ++ "init.d/picandy.sh"
+        -- (sprintf @"PiCandy.ServerHost/bin/%s/**/*.vshost.*" buildConfig)
+        |> FileHelper.CopyFiles destination
     )
 )
 
