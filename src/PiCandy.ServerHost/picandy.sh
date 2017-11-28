@@ -13,7 +13,7 @@
 # See http://druss.co/2015/06/run-kestrel-in-the-background/
 
 # Setup as follows:
-# sudo picandy.sh /etc/init.d/
+# sudo cp picandy.sh /etc/init.d/
 # sudo chmod +x /etc/init.d/picandy.sh
 # sudo update-rc.d picandy.sh defaults
 
