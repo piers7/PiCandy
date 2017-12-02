@@ -18,8 +18,8 @@ if [ ! -d packages ]; then
     nuget restore PiCandy.sln
 fi
 
-if [ ! -e "/lib/libws2011.so" ]; then
-    echo "Building libws2011.so (dependency)"
+if [ ! -e "/lib/libws2811.so" ]; then
+    echo "Building libws2811.so (dependency)"
     pushd rpi_ws281x/mono
     ./build.sh
     sudo cp ../libws2811.so /lib
@@ -28,4 +28,4 @@ fi
 
 echo "Building solution"
 # build the solution (nb: not yet using FAKE here)
-xbuild
+xbuild PiCandy.sln
