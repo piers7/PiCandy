@@ -18,7 +18,8 @@
 # sudo update-rc.d picandy.sh defaults
 
 APP_NAME=picandy
-APP_DIR=/home/pi/dev/PiCandy.ServerHost-bin
+# APP_DIR=/home/pi/dev/PiCandy/src/PiCandy.ServerHost/bin/Debug
+APP_DIR=/home/pi/dev/PiCandy/bin
 APP_EXE=PiCandy.ServerHost.exe
 APP_PATH=$APP_DIR/$APP_EXE
 APP_USR=
