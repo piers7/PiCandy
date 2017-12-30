@@ -30,7 +30,7 @@ echo "Building solution"
 
 # build the solution (nb: not yet using FAKE here)
 xbuild PiCandy.sln
-mkdir -p ./bin
-cp PiCandy.Server.OPC/bin/Debug/* ./bin
-cp PiCandy.Renderer.RpiWs2812/bin/Debug/* ./bin
-cp PiCandy.ServerHost/bin/Debug/* ./bin
+mkdir -p ../bin
+cp PiCandy.Server.OPC/bin/Debug/* ../bin
+cp PiCandy.Renderer.RpiWs2812/bin/Debug/* ../bin
+cp PiCandy.ServerHost/bin/Debug/* ../bin
