@@ -1,4 +1,5 @@
 echo "Installing pre-reqs"
+sudo apt-get update
 sudo apt-get install scons mono-complete nuget -y
 
 echo "Setup trusted roots, or nuget package restore won't work"
